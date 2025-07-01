@@ -84,7 +84,7 @@ To run DataMimic.io locally, you would typically follow these steps:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/datamimic.io.git](https://github.com/your-username/datamimic.io.git)
+    git clone [https://github.com/harsh-kakadiya1/datamimic.io](https://github.com/harsh-kakadiya1/datamimic.io)
     cd datamimic.io
     ```
 2.  **Set up a Python virtual environment:**
