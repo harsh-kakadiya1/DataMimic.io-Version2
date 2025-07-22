@@ -1,0 +1,177 @@
+{% extends "base.html" %}
+
+{% block title %}EDA & Pre-processing{% endblock %}
+
+{% block content %}
+<div class="container">
+    <a href="{{ url_for('home') }}" class="back-button">
+        <i class="fas fa-arrow-left"></i> Back to Home
+    </a>
+    <div class="eda-content">
+        <h1 class="text-center">No-Code EDA & Pre-processing</h1>
+        <p class="text-center lead-text">Upload your data and perform analysis and cleaning without writing a single line of code.</p>
+
+        <div class="form-group">
+            <label for="fileUpload">Upload Your Data</label>
+            <form id="uploadForm" action="{{ url_for('upload_eda_file') }}" method="POST" enctype="multipart/form-data">
+                <input type="file" id="fileUpload" name="file" accept=".csv, .xlsx" required>
+                <p class="help-text">Max file size: 16MB. Allowed: .csv, .xlsx</p>
+                <button type="submit" class="generate-btn"><i class="fas fa-upload"></i> Upload File</button>
+            </form>
+        </div>
+
+        <div id="eda-loading" class="loading">
+            <div class="spinner"></div>
+            <p>Processing data...</p>
+        </div>
+
+        <div id="eda-results" class="results" style="display: none;">
+            <div class="results-header">
+                <h2>Data Overview & Pre-processing</h2>
+            </div>
+            
+            <div class="data-stats">
+                <h3>General Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item"><span class="stat-label">Total Rows:</span> <span class="stat-value" id="eda-total-rows">0</span></div>
+                    <div class="stat-item"><span class="stat-label">Total Columns:</span> <span class="stat-value" id="eda-total-cols">0</span></div>
+                    <div class="stat-item"><span class="stat-label">File Size:</span> <span class="stat-value" id="eda-file-size">0 KB</span></div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h3>Column-wise Details</h3>
+                <div class="table-container">
+                    <table id="columnDetailsTable">
+                        <thead>
+                            <tr>
+                                <th>Column Name</th>
+                                <th>Data Type</th>
+                                <th>Non-Null Count</th>
+                                <th>Missing (%)</th>
+                                <th>Unique Values</th>
+                                <th>Min</th>
+                                <th>Max</th>
+                                <th>Mean</th>
+                                <th>Median</th>
+                                <th>Mode</th>
+                                <th>Std Dev</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Column details will be dynamically inserted here -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <h3>Data Pre-processing Operations</h3>
+                <div class="preprocessing-section">
+                    <h4>Missing Value Handling</h4>
+                    <div class="button-group">
+                        <button class="generate-btn small-btn" data-action="remove_rows_missing">Remove Rows with Any Missing Values</button>
+                        <input type="number" id="missing_col_threshold" placeholder="e.g., 50" min="0" max="100" class="input-inline">
+                        <button class="generate-btn small-btn" data-action="remove_cols_high_missing">Remove Columns with > % Missing</button>
+                    </div>
+
+                    <h5 class="mt-3">Impute Missing Values:</h5>
+                    <div class="mb-3">
+                        <label for="impute_numerical_cols" class="form-label">Numerical Columns:</label>
+                        <select multiple class="form-control" id="impute_numerical_cols" style="min-height: 100px;"></select>
+                        <div class="button-group mt-2">
+                            <button class="generate-btn small-btn" data-action="impute_mean">Impute with Mean</button>
+                            <button class="generate-btn small-btn" data-action="impute_median">Impute with Median</button>
+                            <button class="generate-btn small-btn" data-action="impute_mode_num">Impute with Mode</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="impute_categorical_cols" class="form-label">Categorical Columns:</label>
+                        <select multiple class="form-control" id="impute_categorical_cols" style="min-height: 100px;"></select>
+                        <div class="button-group mt-2">
+                            <button class="generate-btn small-btn" data-action="impute_mode_cat">Impute with Mode (Categorical)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="preprocessing-section">
+                    <h4>Duplicate Handling</h4>
+                    <button class="generate-btn small-btn" data-action="remove_duplicate_rows">Remove Duplicate Rows</button>
+                </div>
+
+                <hr>
+
+                <div class="preprocessing-section">
+                    <h4>Column Management</h4>
+                    <label for="remove_columns_select" class="form-label">Select Columns to Remove:</label>
+                    <select multiple class="form-control" id="remove_columns_select" style="min-height: 100px;"></select>
+                    <button class="generate-btn small-btn mt-2" data-action="remove_selected_columns">Remove Selected Columns</button>
+                </div>
+
+                <hr>
+
+                <div class="preprocessing-section">
+                    <h4>Data Type Conversion</h4>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="convert_col_select" class="form-label">Select Column:</label>
+                            <select class="form-control" id="convert_col_select"></select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="convert_to_type" class="form-label">Convert To:</label>
+                            <select class="form-control" id="convert_to_type">
+                                <option value="">-- Select Type --</option>
+                                <option value="int">Integer</option>
+                                <option value="float">Float</option>
+                                <option value="str">String</option>
+                                <option value="bool">Boolean</option>
+                                <option value="datetime">Date/Time</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="generate-btn small-btn" data-action="change_data_type">Apply Type Conversion</button>
+                </div>
+
+                <hr>
+
+                <div class="preprocessing-section">
+                    <h4>Data Scaling & Normalization</h4>
+                    <label for="scaling_cols_select" class="form-label">Select Numerical Columns to Scale:</label>
+                    <select multiple class="form-control" id="scaling_cols_select" style="min-height: 100px;"></select>
+                    <div class="button-group mt-2">
+                        <button class="generate-btn small-btn" data-action="min_max_scale">Min-Max Scaling (0-1)</button>
+                        <button class="generate-btn small-btn" data-action="standardize">Standardization (Z-score)</button>
+                    </div>
+                </div>
+
+                <hr>
+
+                <div class="preprocessing-section">
+                    <h4>Text Cleaning: Capitalization</h4>
+                    <label for="text_clean_cols" class="form-label">Select Text Columns to Clean:</label>
+                    <select multiple class="form-control" id="text_clean_cols" style="min-height: 100px;"></select>
+                    <div class="button-group mt-2">
+                        <button class="generate-btn small-btn" data-action="uppercase">To UPPERCASE</button>
+                        <button class="generate-btn small-btn" data-action="lowercase">To lowercase</button>
+                        <button class="generate-btn small-btn" data-action="titlecase">To Title Case</button>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <div class="button-group justify-content-center">
+                        <button class="download-btn" data-download-format="csv"><i class="fas fa-download"></i> Download CSV</button>
+                        <button class="download-btn" data-download-format="json"><i class="fas fa-download"></i> Download JSON</button>
+                        <button class="download-btn" data-download-format="xlsx"><i class="fas fa-download"></i> Download Excel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <script src="{{ url_for('static', filename='js/eda.js') }}"></script>
+{% endblock %}
