@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Welcome{% endblock %}
+
+{% block content %}
+<div class="hero-section">
+    <h1>Welcome to DataMimic.io</h1>
+    <p class="lead-text">Generate synthetic data with modern UI and advanced features</p>
+    <a href="{{ url_for('generator') }}" class="try-button">Try DataMimic.io</a>
+</div>
+
+<div class="key-features-section">
+    <h2>Key Features</h2>
+    <div class="feature-grid">
+        <div class="feature-card">
+            <i class="fas fa-layer-group"></i>
+            <h3>Multiple Data Types</h3>
+            <p>Generate medical, finance, and retail data with ease. Supports custom schemas for any use case.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-cogs"></i>
+            <h3>Advanced Configuration</h3>
+            <p>Customize your data with modern, intuitive controls. Adjust missing values, variance, and more.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-file-export"></i>
+            <h3>Multiple Formats</h3>
+            <p>Export your data in CSV, JSON, or Excel format. Easy integration with your workflow.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-bolt"></i>
+            <h3>Fast & Scalable</h3>
+            <p>Generate thousands of records in seconds. Optimized for performance and scalability.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-question-circle"></i>
+            <h3>Missing Values Control</h3>
+            <p>Simulate real-world data incompleteness by adjusting the missing values ratio.</p>
+        </div>
+        <div class="feature-card">
+            <i class="fas fa-random"></i>
+            <h3>Data Variance Control</h3>
+            <p>Control the diversity in your numeric data with your variance adjustment feature.</p>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+    <!-- Any specific scripts for the home page can go here -->
+{% endblock %}

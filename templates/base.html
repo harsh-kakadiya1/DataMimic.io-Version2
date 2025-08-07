@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataMimic.io - {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    <!-- Removed Chart.js and chartjs-plugin-heatmap CDNs -->
+
+    <style>
+        /* Styles for the logo and social links that were inline in your original index.html */
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            position: relative;
+            width: 24px;
+            height: 24px;
+        }
+
+        .logo-icon .disk {
+            width: 24px;
+            height: 6px;
+            border-radius: 3px;
+            background-color: var(--primary-blue);
+            position: absolute;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon .disk:nth-child(1) {
+            top: 0;
+            background-color: var(--primary-blue);
+        }
+
+        .logo-icon .disk:nth-child(2) {
+            top: 9px;
+            background-color: var(--secondary-blue);
+        }
+
+        .logo-icon .disk:nth-child(3) {
+            top: 18px;
+            background-color: var(--light-blue);
+        }
+
+        .logo h1 {
+            font-size: 1.5rem;
+            color: var(--primary-blue);
+            margin: 0;
+        }
+
+        /* Add smooth transitions */
+        .logo:hover .disk:nth-child(1) {
+            transform: translateY(-2px);
+        }
+
+        .logo:hover .disk:nth-child(2) {
+            transform: translateY(-2px);
+        }
+
+        .logo:hover .disk:nth-child(3) {
+            transform: translateY(-2px);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: var(--gray);
+            font-size: 1.5rem;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .social-links a:hover {
+            color: var(--primary-blue);
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::before {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem;
+            background-color: var(--dark-blue);
+            color: var(--white);
+            border-radius: 4px;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .tooltip:hover::before {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Styles for Flask flash messages */
+        .flash-messages-container {
+            margin-top: 1rem;
+            position: relative;
+            z-index: 100;
+        }
+        .flash-message {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .flash-message .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: inherit;
+        }
+        .flash-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .flash-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .flash-info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+    {% block head_scripts %}{% endblock %}
+</head>
+<body>
+    <div class="site-bg-blobs">
+        <div class="site-blob site-blob-blue"></div>
+        <div class="site-blob site-blob-orange"></div>
+        <div class="site-blob site-blob-blue-bottom"></div>
+    </div>
+    <div class="site-bg-grid"></div>
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <div class="disk"></div>
+                    <div class="disk"></div>
+                    <div class="disk"></div>
+                </div>
+                <h1>DataMimic.io</h1>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    {# Dynamic active class based on current Flask endpoint #}
+                    <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+                    <li><a href="{{ url_for('generator') }}" class="{% if request.endpoint == 'generator' %}active{% endif %}">Generator</a></li>
+                    <li><a href="{{ url_for('eda') }}" class="{% if request.endpoint == 'eda' %}active{% endif %}">EDA & Pre-processing</a></li>
+                    <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+                    <li><a href="{{ url_for('features') }}" class="{% if request.endpoint == 'features' %}active{% endif %}">Features</a></li>
+                    <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+            {# Flash messages from Flask backend #}
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages-container">
+                        {% for category, message in messages %}
+                            <div class="flash-message flash-{{ category }}">
+                                {{ message }}
+                                <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';" aria-label="Close">&times;</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer class="main-footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>About Us</h3>
+                <p>Synthetic Data Generator is a powerful tool designed to help developers, researchers, and data scientists generate realistic synthetic data for various domains.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Features</h3>
+                <ul>
+                    <li>Multiple data schemas</li>
+                    <li>Locality-based data generation</li>
+                    <li>Customizable fields</li>
+                    <li>Multiple export formats</li>
+                    <li>Bulk data generation</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Contact</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> datamimic.io@gmail.com</li>
+                    <li><i class="fas fa-phone"></i> +91 9104332333</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Charusat Campus, 388421</li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Follow Us</h3>
+                <div class="social-links">
+                    <a href="https://github.com/harshkakadiya" class="tooltip" data-tooltip="Harsh's GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://github.com/Krish-kunjadiya" class="tooltip" data-tooltip="Krish's GitHub">
+                        <i class="fab fa-github"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/harsh-kakadiya/" class="tooltip" data-tooltip="Harsh's LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                    <a href="https://www.linkedin.com/in/krish-kunjadiya-845041285" class="tooltip" data-tooltip="Krish's LinkedIn">
+                        <i class="fab fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 DataMimic.io | Created by Harsh Kakadiya and Krish Kunjadiya</p>
+        </div>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
