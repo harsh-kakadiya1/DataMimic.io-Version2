@@ -3,49 +3,189 @@
 {% block title %}Welcome{% endblock %}
 
 {% block content %}
+<!-- Hero Section with Gradient Text -->
 <div class="hero-section">
-    <h1>Welcome to DataMimic.io</h1>
-    <p class="lead-text">Generate synthetic data with modern UI and advanced features</p>
-    <a href="{{ url_for('generator') }}" class="try-button">Try DataMimic.io</a>
+    <div class="hero-content">
+        <h1 class="gradient-text">Welcome to DataMimic.io</h1>
+        <p class="lead-text">Generate synthetic data with modern UI and advanced features</p>
+        <div class="hero-buttons">
+            <a href="{{ url_for('generator') }}" class="try-button primary-btn">
+                <i class="fas fa-magic"></i>
+                Try DataMimic.io
+            </a>
+            <a href="{{ url_for('eda') }}" class="try-button secondary-btn">
+                <i class="fas fa-chart-line"></i>
+                Explore EDA Tools
+            </a>
+        </div>
+    </div>
+    <div class="hero-background">
+        <div class="hero-blob hero-blob-1"></div>
+        <div class="hero-blob hero-blob-2"></div>
+        <div class="hero-blob hero-blob-3"></div>
+    </div>
 </div>
 
+<!-- Key Features Section with Ice Box Effect -->
 <div class="key-features-section">
-    <h2>Key Features</h2>
+    <h2 class="section-title">Key Features</h2>
     <div class="feature-grid">
-        <div class="feature-card">
-            <i class="fas fa-layer-group"></i>
+        <!-- Synthetic Data Generation Features -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-layer-group"></i>
+            </div>
             <h3>Multiple Data Types</h3>
-            <p>Generate medical, finance, and retail data with ease. Supports custom schemas for any use case.</p>
+            <p>Generate medical, finance, retail, education, and automotive data with ease. Supports custom schemas for any use case.</p>
         </div>
-        <div class="feature-card">
-            <i class="fas fa-cogs"></i>
+        
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-cogs"></i>
+            </div>
             <h3>Advanced Configuration</h3>
             <p>Customize your data with modern, intuitive controls. Adjust missing values, variance, and more.</p>
         </div>
-        <div class="feature-card">
-            <i class="fas fa-file-export"></i>
+        
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-file-export"></i>
+            </div>
             <h3>Multiple Formats</h3>
             <p>Export your data in CSV, JSON, or Excel format. Easy integration with your workflow.</p>
         </div>
-        <div class="feature-card">
-            <i class="fas fa-bolt"></i>
+        
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-bolt"></i>
+            </div>
             <h3>Fast & Scalable</h3>
             <p>Generate thousands of records in seconds. Optimized for performance and scalability.</p>
         </div>
-        <div class="feature-card">
-            <i class="fas fa-question-circle"></i>
+        
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
             <h3>Missing Values Control</h3>
             <p>Simulate real-world data incompleteness by adjusting the missing values ratio.</p>
         </div>
-        <div class="feature-card">
-            <i class="fas fa-random"></i>
+        
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-random"></i>
+            </div>
             <h3>Data Variance Control</h3>
             <p>Control the diversity in your numeric data with your variance adjustment feature.</p>
+        </div>
+    </div>
+</div>
+
+<!-- EDA & Pre-processing Features Section -->
+<div class="eda-features-section">
+    <h2 class="section-title">EDA & Pre-processing Tools</h2>
+    <div class="feature-grid">
+        <!-- Data Upload & Preview -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-upload"></i>
+            </div>
+            <h3>Smart File Upload</h3>
+            <p>Upload CSV and Excel files with instant preview. Process files in memory for privacy and speed.</p>
+        </div>
+        
+        <!-- Data Cleaning -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-broom"></i>
+            </div>
+            <h3>Data Cleaning</h3>
+            <p>Remove missing values, duplicates, and outliers. Clean text data with capitalization options.</p>
+        </div>
+        
+        <!-- Data Imputation -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-fill-drip"></i>
+            </div>
+            <h3>Smart Imputation</h3>
+            <p>Fill missing values using mean, median, mode strategies for numerical and categorical data.</p>
+        </div>
+        
+        <!-- Data Transformation -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-exchange-alt"></i>
+            </div>
+            <h3>Data Transformation</h3>
+            <p>Convert data types, scale numerical columns, and transform text data with ease.</p>
+        </div>
+        
+        <!-- Data Analysis -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-chart-bar"></i>
+            </div>
+            <h3>Statistical Analysis</h3>
+            <p>Get comprehensive statistics, column details, and data insights automatically.</p>
+        </div>
+        
+        <!-- Data Export -->
+        <div class="feature-card ice-box">
+            <div class="feature-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <h3>Processed Data Export</h3>
+            <p>Download your cleaned and processed data in multiple formats for further analysis.</p>
+        </div>
+    </div>
+</div>
+
+<!-- Statistics Section -->
+<div class="stats-section">
+    <h2 class="section-title">Platform Statistics</h2>
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-number">5+</div>
+            <div class="stat-label">Data Schemas</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">100MB</div>
+            <div class="stat-label">Max File Size</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">3</div>
+            <div class="stat-label">Export Formats</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-number">10+</div>
+            <div class="stat-label">Preprocessing Tools</div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-    <!-- Any specific scripts for the home page can go here -->
+<script>
+// Add smooth scroll animation for feature cards
+document.addEventListener('DOMContentLoaded', function() {
+    const featureCards = document.querySelectorAll('.feature-card');
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    featureCards.forEach(card => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(30px)';
+        card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(card);
+    });
+});
+</script>
 {% endblock %}
