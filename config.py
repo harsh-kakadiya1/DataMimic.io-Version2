@@ -3,8 +3,7 @@ import os
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your_default_flask_secret_key_here_for_dev_only'
     
-    # Paths for uploads and generated data
-    UPLOAD_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'uploads')
+    # Paths for generated data only (no upload folder needed since we process files in memory)
     GENERATED_DATA_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'generated_data')
     
     # INCREASE THIS VALUE SIGNIFICANTLY (e.g., to 100 MB)
@@ -21,8 +20,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get('EMAIL_PASS') # Loaded from .env or environment variable
     MAIL_DEFAULT_SENDER = ('DataMimic.io Support', os.environ.get('EMAIL_USER')) # Display name and sender email
 
-    # Ensure upload and generated data directories exist on startup
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+    # Ensure generated data directory exists on startup (no upload folder needed)
     os.makedirs(GENERATED_DATA_FOLDER, exist_ok=True)
 
     @staticmethod

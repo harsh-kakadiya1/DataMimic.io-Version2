@@ -32,7 +32,7 @@ app.config.from_object(Config)
 
 mail = Mail(app)
 
-os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+# Only create generated data directory (no upload folder needed since we process files in memory)
 os.makedirs(app.config['GENERATED_DATA_FOLDER'], exist_ok=True)
 
 # --- Routes for Frontend Pages ---
