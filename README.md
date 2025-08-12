@@ -7,7 +7,7 @@ To develop a comprehensive web application, DataMimic.io, that serves as a power
 *   **Backend**: Python (Flask, Pandas, NumPy, Scikit-learn, Faker)
 *   **Frontend**: HTML, CSS (Bootstrap 5), JavaScript
 
-## Features (Planned)
+### Features (Planned)
 
 ### Module 1: Synthetic Data Generation
 *   **Core Dataset Parameters**: Number of Records, Missing Value Percentage, Feature Covariance/Correlation Control.
