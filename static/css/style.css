@@ -1002,7 +1002,7 @@ select option:disabled {
 /* EDA Features Section */
 .eda-features-section {
     padding: 4rem 0;
-    background: linear-gradient(135deg, rgba(232, 240, 254, 0.5) 0%, rgba(255, 152, 0, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(232, 240, 254, 0.5) 0%, rgba(250, 5, 5, 0.05) 100%);
 }
 
 /* Statistics Section */

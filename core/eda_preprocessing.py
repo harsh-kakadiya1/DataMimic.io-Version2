@@ -232,7 +232,7 @@ def scale_columns(df: pd.DataFrame, columns: list, method: str):
 
         if method == 'min_max':
             scaler = MinMaxScaler()
-        elif method == 'standard':
+        elif method == 'standardize':
             scaler = StandardScaler()
         else:
             raise ValueError(f"Unsupported scaling method: {method}")
