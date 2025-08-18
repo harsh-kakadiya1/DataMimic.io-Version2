@@ -63,6 +63,35 @@ def contact():
     """Contact page."""
     return render_template('contact.html')
 
+# Contact form submission route
+@app.route('/submit_contact', methods=['POST'])
+def submit_contact():
+    data = {
+        'name': request.form.get('name'),
+        'email': request.form.get('email'),
+        'subject': request.form.get('subject'),
+        'message': request.form.get('message')
+    }
+    # Validate required fields
+    if not all([data['name'], data['email'], data['subject'], data['message']]):
+        flash('All fields are required.', 'error')
+        return redirect(url_for('contact'))
+    # Save to messages.json
+    messages_path = os.path.join(os.path.dirname(__file__), 'messages.json')
+    try:
+        if os.path.exists(messages_path):
+            with open(messages_path, 'r', encoding='utf-8') as f:
+                messages = json.load(f)
+        else:
+            messages = []
+        messages.append(data)
+        with open(messages_path, 'w', encoding='utf-8') as f:
+            json.dump(messages, f, indent=2)
+        flash('Your message has been sent successfully!', 'success')
+    except Exception as e:
+        flash('Failed to save your message. Please try again later.', 'error')
+    return redirect(url_for('contact'))
+
 @app.route('/eda')
 def eda():
     # Clean up any old EDA dataframe for this session when navigating to EDA page
