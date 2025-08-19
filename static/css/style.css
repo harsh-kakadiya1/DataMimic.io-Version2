@@ -746,13 +746,13 @@ select option:disabled {
 .gradient-text {
     font-size: 3.5rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #1a73e8 0%, #ff9800 50%, #1a73e8 100%);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: var(--primary-blue);
+    background: none;
+    -webkit-background-clip: border-box;
+    background-clip: border-box;
+    -webkit-text-fill-color: var(--primary-blue);
     margin-bottom: 1.5rem;
-    animation: gradientShift 3s ease-in-out infinite;
+    animation: none;
 }
 
 @keyframes gradientShift {
@@ -1254,6 +1254,14 @@ select option:disabled {
     box-shadow: 0 4px 16px rgba(26, 115, 232, 0.15);
 }
 
+/* Generator Page spacing */
+.generator-page {
+    padding-top: 1rem;
+}
+.generator-page .form-group:first-of-type {
+    margin-top: 0.5rem;
+}
+
 @media (max-width: 900px) {
     .contact-content {
         flex-direction: column;
@@ -1300,9 +1308,15 @@ select option:disabled {
     list-style: none;
     padding: 0;
     margin: 2rem 0 0 0;
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
     gap: 2rem;
+    align-items: stretch;
+}
+@media (max-width: 900px) {
+    .steps-list {
+        grid-template-columns: 1fr;
+    }
 }
 .steps-list li {
     display: flex;
@@ -1311,9 +1325,8 @@ select option:disabled {
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(26, 115, 232, 0.07);
     padding: 1.2rem 1.5rem;
-    flex: 1 1 320px;
-    min-width: 260px;
-    margin-bottom: 1rem;
+    height: 100%;
+    min-height: 170px;
     transition: box-shadow 0.2s;
 }
 .steps-list li:hover {
@@ -1325,8 +1338,9 @@ select option:disabled {
     font-size: 1.5rem;
     font-weight: 700;
     border-radius: 50%;
-    width: 40px;
-    height: 40px;
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
     display: flex;
     align-items: center;
     justify-content: center;

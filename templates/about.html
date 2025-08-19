@@ -59,23 +59,101 @@
         
         <div class="about-section">
             <h2>Advanced Features</h2>
+
+            <h3>Data Generation</h3>
             <div class="feature-grid">
                 <div class="feature-card">
-                    <h3><i class="fas fa-question-circle"></i> Missing Values Control</h3>
-                    <p>Our tool allows you to control the percentage of missing values in your generated data, simulating real-world data incompleteness. This is crucial for testing how your data processing pipelines and machine learning models handle incomplete data.</p>
-                    <p>You can adjust the missing values ratio from 0% to 100%, and our tool will randomly distribute missing values across your dataset. The statistics panel shows you the actual percentage of missing values in your generated data.</p>
+                    <h3><i class="fas fa-sliders-h"></i> Missing Values Control</h3>
+                    <p>Precisely simulate real‑world incompleteness or keep data fully complete. Configure once and generate with a single click.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Ratio slider: 0%–100% randomly distributed</li>
+                        <li><i class="fas fa-check"></i> Remove rows with missing values</li>
+                        <li><i class="fas fa-check"></i> Imputation (numeric): mean, median</li>
+                        <li><i class="fas fa-check"></i> Imputation (categorical): mode</li>
+                        <li><i class="fas fa-check"></i> Constant/value fill option</li>
+                    </ul>
                 </div>
-                
                 <div class="feature-card">
-                    <h3><i class="fas fa-random"></i> Data Variance Control</h3>
-                    <p>Control the diversity in your numeric data with our variance adjustment feature. This allows you to create datasets with varying levels of dispersion, from highly consistent to highly diverse.</p>
-                    <p>Adjust the variance ratio from 0% to 100% to control how much the numeric values deviate from their expected values. The statistics panel provides insights into the actual variance in your generated data.</p>
+                    <h3><i class="fas fa-random"></i> Variance & Distributions</h3>
+                    <p>Control spread and realism of numeric columns.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Variance intensity control</li>
+                        <li><i class="fas fa-check"></i> Min/Max range constraints</li>
+                        <li><i class="fas fa-check"></i> Optional distribution‑like behavior</li>
+                    </ul>
                 </div>
-                
                 <div class="feature-card">
-                    <h3><i class="fas fa-chart-bar"></i> Data Analytics</h3>
-                    <p>Our tool provides comprehensive statistics about your generated data, including overall metrics and column-specific information. This helps you understand the characteristics of your synthetic data and ensure it meets your requirements.</p>
-                    <p>The statistics panel shows you the total number of records, the percentage of missing values, the average variance across numeric columns, and detailed metrics for each column.</p>
+                    <h3><i class="fas fa-globe"></i> Localization</h3>
+                    <p>Generate region‑specific names, phones and addresses that match a chosen locality.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Country/region presets</li>
+                        <li><i class="fas fa-check"></i> Phone and postal formats</li>
+                        <li><i class="fas fa-check"></i> Cultural name sets</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-chart-bar"></i> Built‑in Data Analytics</h3>
+                    <p>Live stats to validate synthetic output.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Missing‑value percentage</li>
+                        <li><i class="fas fa-check"></i> Variance overview</li>
+                        <li><i class="fas fa-check"></i> Column‑wise summaries</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h3>EDA Tools</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3><i class="fas fa-bolt"></i> Instant Visualization</h3>
+                    <p>One‑click charts for quick insights.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Histograms, bar, line and pie</li>
+                        <li><i class="fas fa-check"></i> Auto column selection</li>
+                        <li><i class="fas fa-check"></i> Works directly on uploaded data</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-braille"></i> Encoding</h3>
+                    <p>Transform categorical features with a click.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> One‑hot encoding</li>
+                        <li><i class="fas fa-check"></i> Label encoding</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-exchange-alt"></i> Type Conversion</h3>
+                    <p>Fix schema issues fast.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Numeric, categorical and datetime casts</li>
+                        <li><i class="fas fa-check"></i> Smart parsing for common formats</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-balance-scale"></i> Scaling & Normalization</h3>
+                    <p>Standardize features for ML in one click.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Standard (z‑score)</li>
+                        <li><i class="fas fa-check"></i> Min‑Max</li>
+                        <li><i class="fas fa-check"></i> Robust scaling</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-font"></i> Text Utilities</h3>
+                    <p>Clean text columns instantly.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Uppercase, lowercase, title‑case</li>
+                        <li><i class="fas fa-check"></i> Trim, deduplicate whitespace</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <h3><i class="fas fa-tools"></i> One‑Click Fixes</h3>
+                    <p>High‑leverage helpers to speed up EDA.</p>
+                    <ul>
+                        <li><i class="fas fa-check"></i> Drop duplicates</li>
+                        <li><i class="fas fa-check"></i> Outlier clipping (basic)</li>
+                        <li><i class="fas fa-check"></i> Quick column rename/reorder</li>
+                    </ul>
                 </div>
             </div>
         </div>
