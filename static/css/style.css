@@ -528,23 +528,32 @@ tr:hover {
     z-index: 0;
     pointer-events: none;
     overflow: hidden;
-    /* Professional, subtle multi‑layer gradient */
-    background:
-        radial-gradient(800px 400px at -10% 0%, rgba(234, 242, 255, 0.9) 0%, rgba(234, 242, 255, 0) 60%),
-        radial-gradient(700px 350px at 110% 15%, rgba(243, 233, 255, 0.85) 0%, rgba(243, 233, 255, 0) 55%),
-        radial-gradient(900px 500px at 100% 100%, rgba(232, 251, 255, 0.9) 0%, rgba(232, 251, 255, 0) 55%),
-        linear-gradient(180deg, #f9fbff 0%, #f2f5ff 100%);
 }
 .site-blob {
-    display: none; /* replaced by gradient background above */
     position: absolute;
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.45;
 }
-.site-blob-blue { display: none; }
-.site-blob-orange { display: none; }
-.site-blob-blue-bottom { display: none; }
+.site-blob-blue {
+    width: 420px; height: 420px;
+    background: #3b82f6;
+    top: -120px; left: -120px;
+}
+.site-blob-orange {
+    width: 340px; height: 340px;
+    background: #ff9800;
+    top: 60px; right: -100px;
+    left: auto;
+    opacity: 0.32;
+}
+.site-blob-blue-bottom {
+    width: 900px; height: 900px;
+    background: #3b82f6;
+    bottom: -350px; right: -350px;
+    opacity: 0.32;
+    filter: blur(80px);
+}
 
 /* Subtle grid pattern overlay */
 .site-bg-grid {
@@ -552,9 +561,9 @@ tr:hover {
     top: 0; left: 0; width: 100vw; height: 100vh;
     z-index: 1;
     pointer-events: none;
-    background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="60" height="60" fill="none"/><path d="M60 0V60M0 60H60" stroke="%2390a2c0" stroke-width="1" opacity="0.10"/><path d="M0 0H60V60" stroke="%2390a2c0" stroke-width="1" opacity="0.10"/></svg>');
+    background-image: url('data:image/svg+xml;utf8,<svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="60" height="60" fill="none"/><path d="M60 0V60M0 60H60" stroke="%2399a3ba" stroke-width="1" opacity="0.10"/><path d="M0 0H60V60" stroke="%2399a3ba" stroke-width="1" opacity="0.10"/></svg>');
     background-size: 60px 60px;
-    opacity: 0.18;
+    opacity: 0.25;
     mix-blend-mode: multiply;
 }
 
