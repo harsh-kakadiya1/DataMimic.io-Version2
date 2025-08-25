@@ -56,6 +56,29 @@
             font-size: 1.5rem;
             color: var(--primary-blue);
             margin: 0;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .main-header.scrolled .logo h1 {
+            font-size: 1.2rem;
+        }
+
+        .main-header.scrolled .logo-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .main-header.scrolled .logo-icon .disk {
+            width: 20px;
+            height: 5px;
+        }
+
+        .main-header.scrolled .logo-icon .disk:nth-child(2) {
+            top: 7px;
+        }
+
+        .main-header.scrolled .logo-icon .disk:nth-child(3) {
+            top: 14px;
         }
 
         /* Add smooth transitions */
@@ -250,6 +273,45 @@
             <p>© 2025 DataMimic.io | Created by Harsh Kakadiya and Krish Kunjadiya</p>
         </div>
     </footer>
+    
+    <script>
+        // Dynamic Navigation Bar Scroll Animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.main-header');
+            let isScrolled = false;
+            let ticking = false;
+            
+            function updateHeader() {
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                const shouldBeScrolled = scrollTop > 100;
+                
+                if (shouldBeScrolled !== isScrolled) {
+                    isScrolled = shouldBeScrolled;
+                    
+                    if (isScrolled) {
+                        header.classList.add('scrolled');
+                    } else {
+                        header.classList.remove('scrolled');
+                    }
+                }
+                ticking = false;
+            }
+            
+            function requestTick() {
+                if (!ticking) {
+                    requestAnimationFrame(updateHeader);
+                    ticking = true;
+                }
+            }
+            
+            // Throttled scroll event listener for better performance
+            window.addEventListener('scroll', requestTick, { passive: true });
+            
+            // Initial check in case page is already scrolled
+            updateHeader();
+        });
+    </script>
+    
     {% block scripts %}{% endblock %}
 </body>
 </html>
