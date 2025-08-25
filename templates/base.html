@@ -227,6 +227,18 @@
         </div>
     </main>
 
+    <!-- Back to Top Button -->
+    <div id="backToTop" class="back-to-top">
+        <div class="progress-ring">
+            <svg class="progress-ring-svg" width="60" height="60">
+                <circle class="progress-ring-circle-bg" cx="30" cy="30" r="26" stroke="#e0e0e0" stroke-width="4" fill="transparent"/>
+                <circle class="progress-ring-circle" cx="30" cy="30" r="26" stroke="#6495ed" stroke-width="4" fill="transparent"/>
+            </svg>
+            <i class="fas fa-chevron-up"></i>
+        </div>
+        <span class="back-to-top-text">Back to Top</span>
+    </div>
+
     <footer class="main-footer">
         <div class="footer-content">
             <div class="footer-section">
@@ -350,6 +362,46 @@
             // Initial check in case page is already scrolled
             updateHeader();
         });
+        
+        // Back to Top Button Functionality
+        const backToTopButton = document.getElementById('backToTop');
+        const progressCircle = document.querySelector('.progress-ring-circle');
+        const circumference = 2 * Math.PI * 26; // 2πr where r=26
+        
+        // Set initial stroke-dasharray
+        progressCircle.style.strokeDasharray = circumference;
+        progressCircle.style.strokeDashoffset = circumference;
+        
+        function updateScrollProgress() {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const documentHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrollPercent = scrollTop / documentHeight;
+            
+            // Update progress circle
+            const offset = circumference - (scrollPercent * circumference);
+            progressCircle.style.strokeDashoffset = offset;
+            
+            // Show/hide button based on scroll position
+            if (scrollTop > 300) {
+                backToTopButton.classList.add('visible');
+            } else {
+                backToTopButton.classList.remove('visible');
+            }
+        }
+        
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+        
+        // Event listeners
+        window.addEventListener('scroll', updateScrollProgress, { passive: true });
+        backToTopButton.addEventListener('click', scrollToTop);
+        
+        // Initial call
+        updateScrollProgress();
     </script>
     
     {% block scripts %}{% endblock %}
