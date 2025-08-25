@@ -1057,6 +1057,50 @@ select option:disabled {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
+/* Key Features Section - Light Blue Theme */
+.key-features-section .feature-card.ice-box {
+    background: rgb(179 212 255 / 73%);
+    border: 1px solid rgb(179 212 255 / 90%);
+    box-shadow: 0 8px 32px rgba(179, 212, 255, 0.4);
+}
+
+.key-features-section .feature-card.ice-box:hover {
+    background: rgb(179 212 255 / 85%);
+    border-color: rgb(179 212 255);
+    box-shadow: 0 20px 40px rgba(179, 212, 255, 0.5);
+}
+
+.key-features-section .feature-icon {
+    background: linear-gradient(135deg, rgb(179, 212, 255), rgb(159, 192, 235));
+    box-shadow: 0 8px 25px rgba(179, 212, 255, 0.6);
+}
+
+.key-features-section .feature-card.ice-box:hover .feature-icon {
+    box-shadow: 0 12px 35px rgba(179, 212, 255, 0.8);
+}
+
+/* EDA Features Section - Light Blue Theme */
+.eda-features-section .feature-card.ice-box {
+    background: rgb(179 212 255 / 73%);
+    border: 1px solid rgb(179 212 255 / 90%);
+    box-shadow: 0 8px 32px rgba(179, 212, 255, 0.4);
+}
+
+.eda-features-section .feature-card.ice-box:hover {
+    background: rgb(179 212 255 / 85%);
+    border-color: rgb(179 212 255);
+    box-shadow: 0 20px 40px rgba(179, 212, 255, 0.5);
+}
+
+.eda-features-section .feature-icon {
+    background: linear-gradient(135deg, rgb(179, 212, 255), rgb(159, 192, 235));
+    box-shadow: 0 8px 25px rgba(179, 212, 255, 0.6);
+}
+
+.eda-features-section .feature-card.ice-box:hover .feature-icon {
+    box-shadow: 0 12px 35px rgba(179, 212, 255, 0.8);
+}
+
 .feature-card.ice-box::before {
     content: '';
     position: absolute;
@@ -1132,25 +1176,27 @@ select option:disabled {
 }
 
 .stat-card {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgb(179 212 255 / 73%);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgb(179 212 255 / 90%);
     border-radius: 15px;
     padding: 2rem;
     text-align: center;
     transition: all 0.3s ease;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 32px rgba(179, 212, 255, 0.4);
 }
 
 .stat-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    background: rgb(179 212 255 / 85%);
+    border-color: rgb(179 212 255);
+    box-shadow: 0 15px 40px rgba(179, 212, 255, 0.5);
 }
 
 .stat-number {
     font-size: 3rem;
     font-weight: 700;
-    background: linear-gradient(135deg, #1a73e8, #ff9800);
+    background: linear-gradient(135deg, #ff1493, #ff4500);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
