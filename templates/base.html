@@ -183,7 +183,6 @@
         <div class="site-blob site-blob-blue-bottom"></div>
     </div>
     <div class="site-bg-grid"></div>
-    <div class="blur-backdrop"></div>
     <header class="main-header">
         <div class="header-content">
             <div class="logo">
@@ -276,43 +275,60 @@
     </footer>
     
     <script>
-        // Dynamic Navigation Bar Scroll Animation with Progressive Blur
+        // Dynamic Navigation Bar Scroll Animation
         document.addEventListener('DOMContentLoaded', function() {
             const header = document.querySelector('.main-header');
-            const blurBackdrop = document.querySelector('.blur-backdrop');
-            let isScrolled = false;
             let ticking = false;
             
             function updateHeader() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                const shouldBeScrolled = scrollTop > 100;
                 
-                // Progressive blur effect - starts immediately on scroll
+                // Immediate rounded corners and progressive width reduction
                 if (scrollTop > 0) {
-                    const blurIntensity = Math.min(scrollTop / 200, 1); // Max blur at 200px scroll
-                    const blurValue = blurIntensity * 20; // Max 20px blur
+                    const maxScroll = 300; // Complete transformation at 300px
+                    const scrollProgress = Math.min(scrollTop / maxScroll, 1);
                     
-                    blurBackdrop.style.opacity = blurIntensity * 0.8;
-                    blurBackdrop.style.backdropFilter = `blur(${blurValue}px)`;
+                    // Progressive width reduction (from 100% to 60%)
+                    const minWidth = 60; // Minimum width percentage
+                    const maxWidth = 100; // Maximum width percentage
+                    const currentWidth = maxWidth - (scrollProgress * (maxWidth - minWidth));
                     
-                    if (scrollTop > 50) {
-                        blurBackdrop.classList.add('active');
-                    }
+                    // Progressive height reduction (from 70px to 55px)
+                    const minHeight = 55;
+                    const maxHeight = 70;
+                    const currentHeight = maxHeight - (scrollProgress * (maxHeight - minHeight));
+                    
+                    // Progressive margin for centering
+                    const maxMargin = (100 - currentWidth) / 2;
+                    const topMargin = 5 + (scrollProgress * 10); // 5px to 15px top margin
+                    
+                    // Apply progressive styles
+                    header.style.width = `${currentWidth}%`;
+                    header.style.height = `${currentHeight}px`;
+                    header.style.left = `${maxMargin}%`;
+                    header.style.right = `${maxMargin}%`;
+                    header.style.margin = `${topMargin}px auto`;
+                    header.style.borderRadius = '50px'; // Immediate full rounding
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
+                    header.style.backdropFilter = 'blur(10px)';
+                    header.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
+                    header.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                    
+                    // Add progressive class for styling
+                    header.classList.add('progressive');
                 } else {
-                    blurBackdrop.style.opacity = '0';
-                    blurBackdrop.style.backdropFilter = 'blur(0px)';
-                    blurBackdrop.classList.remove('active');
-                }
-                
-                // Header transformation
-                if (shouldBeScrolled !== isScrolled) {
-                    isScrolled = shouldBeScrolled;
-                    
-                    if (isScrolled) {
-                        header.classList.add('scrolled');
-                    } else {
-                        header.classList.remove('scrolled');
-                    }
+                    // Reset to original state
+                    header.style.width = '';
+                    header.style.height = '';
+                    header.style.left = '';
+                    header.style.right = '';
+                    header.style.margin = '';
+                    header.style.borderRadius = '';
+                    header.style.backgroundColor = '';
+                    header.style.backdropFilter = '';
+                    header.style.boxShadow = '';
+                    header.style.border = '';
+                    header.classList.remove('progressive');
                 }
                 ticking = false;
             }

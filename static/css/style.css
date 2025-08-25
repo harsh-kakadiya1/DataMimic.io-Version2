@@ -47,35 +47,6 @@ html::-webkit-scrollbar {
     display: none;
 }
 
-/* Progressive Blur Backdrop */
-.blur-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: var(--header-height);
-    background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.9) 0%, 
-        rgba(255, 255, 255, 0.7) 60%,
-        rgba(255, 255, 255, 0.3) 90%,
-        rgba(255, 255, 255, 0) 100%);
-    backdrop-filter: blur(0px);
-    z-index: 999;
-    opacity: 0;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    pointer-events: none;
-}
-
-.blur-backdrop.scrolled {
-    height: 80px;
-    margin: 10px 0;
-    border-radius: 50px;
-}
-
-.blur-backdrop.active {
-    opacity: 1;
-    backdrop-filter: blur(20px);
-}
 
 /* Header Styles */
 .main-header {
@@ -89,6 +60,15 @@ html::-webkit-scrollbar {
     height: var(--header-height);
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     border-radius: 0;
+}
+
+/* Progressive header scaling - will be controlled by JavaScript */
+.main-header.progressive {
+    border-radius: 50px;
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
 /* Scrolled header state */
@@ -443,6 +423,11 @@ tr:hover {
         gap: 1rem;
     }
 
+    /* Mobile progressive header adjustments */
+    .main-header.progressive {
+        min-width: 280px; /* Ensure minimum width on mobile */
+    }
+
     /* Mobile scrolled header adjustments */
     .main-header.scrolled {
         margin: 5px 10px;
@@ -450,6 +435,7 @@ tr:hover {
         right: 10px;
         width: calc(100% - 20px);
         height: 55px;
+        min-width: 280px;
     }
 
     .main-header.scrolled .header-content {
