@@ -283,14 +283,14 @@
             function updateHeader() {
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 
-                // Immediate rounded corners and progressive width reduction
+                // Progressive navbar transformation
                 if (scrollTop > 0) {
                     const maxScroll = 300; // Complete transformation at 300px
                     const scrollProgress = Math.min(scrollTop / maxScroll, 1);
                     
                     // Progressive width reduction (from 100% to 60%)
-                    const minWidth = 60; // Minimum width percentage
-                    const maxWidth = 100; // Maximum width percentage
+                    const minWidth = 60;
+                    const maxWidth = 100;
                     const currentWidth = maxWidth - (scrollProgress * (maxWidth - minWidth));
                     
                     // Progressive height reduction (from 70px to 55px)
@@ -300,7 +300,13 @@
                     
                     // Progressive margin for centering
                     const maxMargin = (100 - currentWidth) / 2;
-                    const topMargin = 5 + (scrollProgress * 10); // 5px to 15px top margin
+                    const topMargin = 5 + (scrollProgress * 10);
+                    
+                    // Progressive blur and transparency
+                    const blurStart = 50; // Start blur after 50px scroll
+                    const blurProgress = Math.max(0, Math.min((scrollTop - blurStart) / (maxScroll - blurStart), 1));
+                    const blurIntensity = blurProgress * 15; // Max 15px blur for subtle effect
+                    const backgroundOpacity = Math.min(scrollTop / 100, 0.85); // Max 85% opacity
                     
                     // Apply progressive styles
                     header.style.width = `${currentWidth}%`;
@@ -309,15 +315,15 @@
                     header.style.right = `${maxMargin}%`;
                     header.style.margin = `${topMargin}px auto`;
                     header.style.borderRadius = '50px'; // Immediate full rounding
-                    header.style.backgroundColor = 'rgba(255, 255, 255, 0.95)';
-                    header.style.backdropFilter = 'blur(10px)';
-                    header.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.15)';
-                    header.style.border = '1px solid rgba(255, 255, 255, 0.3)';
+                    header.style.backgroundColor = `rgba(255, 255, 255, ${backgroundOpacity})`;
+                    header.style.backdropFilter = `blur(${blurIntensity}px)`;
+                    header.style.boxShadow = scrollTop > 20 ? '0 8px 32px rgba(0, 0, 0, 0.1)' : 'none';
+                    header.style.border = scrollTop > 20 ? '1px solid rgba(255, 255, 255, 0.2)' : 'none';
                     
                     // Add progressive class for styling
                     header.classList.add('progressive');
                 } else {
-                    // Reset to original state
+                    // Reset to original transparent state
                     header.style.width = '';
                     header.style.height = '';
                     header.style.left = '';
