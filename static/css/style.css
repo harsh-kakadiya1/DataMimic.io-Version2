@@ -50,8 +50,8 @@ html::-webkit-scrollbar {
 
 /* Header Styles */
 .main-header {
-    background-color: transparent;
-    box-shadow: none;
+    background-color: var(--white);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     position: fixed;
     top: 0;
     left: 0;

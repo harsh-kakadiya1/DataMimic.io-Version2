@@ -302,11 +302,8 @@
                     const maxMargin = (100 - currentWidth) / 2;
                     const topMargin = 5 + (scrollProgress * 10);
                     
-                    // Progressive blur and transparency
-                    const blurStart = 50; // Start blur after 50px scroll
-                    const blurProgress = Math.max(0, Math.min((scrollTop - blurStart) / (maxScroll - blurStart), 1));
-                    const blurIntensity = blurProgress * 15; // Max 15px blur for subtle effect
-                    const backgroundOpacity = Math.min(scrollTop / 100, 0.85); // Max 85% opacity
+                    // Progressive blur with solid white background
+                    const blurIntensity = scrollProgress * 20; // Progressive blur from 0 to 20px
                     
                     // Apply progressive styles
                     header.style.width = `${currentWidth}%`;
@@ -315,10 +312,10 @@
                     header.style.right = `${maxMargin}%`;
                     header.style.margin = `${topMargin}px auto`;
                     header.style.borderRadius = '50px'; // Immediate full rounding
-                    header.style.backgroundColor = `rgba(255, 255, 255, ${backgroundOpacity})`;
+                    header.style.backgroundColor = 'rgba(255, 255, 255, 1)'; // Solid white
                     header.style.backdropFilter = `blur(${blurIntensity}px)`;
                     header.style.boxShadow = scrollTop > 20 ? '0 8px 32px rgba(0, 0, 0, 0.1)' : 'none';
-                    header.style.border = scrollTop > 20 ? '1px solid rgba(255, 255, 255, 0.2)' : 'none';
+                    header.style.border = 'none';
                     
                     // Add progressive class for styling
                     header.classList.add('progressive');
@@ -333,7 +330,7 @@
                     header.style.backgroundColor = '';
                     header.style.backdropFilter = '';
                     header.style.boxShadow = '';
-                    header.style.border = '';
+                    header.style.border = 'none';
                     header.classList.remove('progressive');
                 }
                 ticking = false;
