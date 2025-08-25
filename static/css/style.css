@@ -53,17 +53,23 @@ html::-webkit-scrollbar {
     top: 0;
     left: 0;
     right: 0;
-    height: 150px;
+    height: var(--header-height);
     background: linear-gradient(180deg, 
-        rgba(255, 255, 255, 0.95) 0%, 
-        rgba(255, 255, 255, 0.8) 40%,
-        rgba(255, 255, 255, 0.4) 70%,
+        rgba(255, 255, 255, 0.9) 0%, 
+        rgba(255, 255, 255, 0.7) 60%,
+        rgba(255, 255, 255, 0.3) 90%,
         rgba(255, 255, 255, 0) 100%);
     backdrop-filter: blur(0px);
     z-index: 999;
     opacity: 0;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     pointer-events: none;
+}
+
+.blur-backdrop.scrolled {
+    height: 80px;
+    margin: 10px 0;
+    border-radius: 50px;
 }
 
 .blur-backdrop.active {
