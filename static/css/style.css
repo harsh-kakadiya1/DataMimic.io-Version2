@@ -28,6 +28,47 @@ body {
     position: relative;
     min-height: 100vh;
     background: none !important;
+    /* Hide scrollbar for all browsers */
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+/* Hide scrollbar for WebKit browsers (Chrome, Safari, Edge) */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+html {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* Internet Explorer 10+ */
+}
+
+html::-webkit-scrollbar {
+    display: none;
+}
+
+/* Progressive Blur Backdrop */
+.blur-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 150px;
+    background: linear-gradient(180deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.8) 40%,
+        rgba(255, 255, 255, 0.4) 70%,
+        rgba(255, 255, 255, 0) 100%);
+    backdrop-filter: blur(0px);
+    z-index: 999;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: none;
+}
+
+.blur-backdrop.active {
+    opacity: 1;
+    backdrop-filter: blur(20px);
 }
 
 /* Header Styles */
@@ -52,10 +93,10 @@ body {
     right: 20px;
     width: calc(100% - 40px);
     border-radius: 50px;
-    background-color: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(20px);
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(25px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     animation: slideDown 0.4s ease-out;
 }
 

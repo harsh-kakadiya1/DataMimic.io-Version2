@@ -183,6 +183,7 @@
         <div class="site-blob site-blob-blue-bottom"></div>
     </div>
     <div class="site-bg-grid"></div>
+    <div class="blur-backdrop"></div>
     <header class="main-header">
         <div class="header-content">
             <div class="logo">
@@ -275,9 +276,10 @@
     </footer>
     
     <script>
-        // Dynamic Navigation Bar Scroll Animation
+        // Dynamic Navigation Bar Scroll Animation with Progressive Blur
         document.addEventListener('DOMContentLoaded', function() {
             const header = document.querySelector('.main-header');
+            const blurBackdrop = document.querySelector('.blur-backdrop');
             let isScrolled = false;
             let ticking = false;
             
@@ -285,6 +287,24 @@
                 const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
                 const shouldBeScrolled = scrollTop > 100;
                 
+                // Progressive blur effect - starts immediately on scroll
+                if (scrollTop > 0) {
+                    const blurIntensity = Math.min(scrollTop / 200, 1); // Max blur at 200px scroll
+                    const blurValue = blurIntensity * 20; // Max 20px blur
+                    
+                    blurBackdrop.style.opacity = blurIntensity * 0.8;
+                    blurBackdrop.style.backdropFilter = `blur(${blurValue}px)`;
+                    
+                    if (scrollTop > 50) {
+                        blurBackdrop.classList.add('active');
+                    }
+                } else {
+                    blurBackdrop.style.opacity = '0';
+                    blurBackdrop.style.backdropFilter = 'blur(0px)';
+                    blurBackdrop.classList.remove('active');
+                }
+                
+                // Header transformation
                 if (shouldBeScrolled !== isScrolled) {
                     isScrolled = shouldBeScrolled;
                     
