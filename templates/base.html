@@ -302,8 +302,9 @@
                     const maxMargin = (100 - currentWidth) / 2;
                     const topMargin = 5 + (scrollProgress * 10);
                     
-                    // Progressive blur with solid white background
+                    // Progressive transparency and blur
                     const blurIntensity = scrollProgress * 20; // Progressive blur from 0 to 20px
+                    const backgroundOpacity = 1 - (scrollProgress * 0.4); // From 1 (solid) to 0.6 (transparent)
                     
                     // Apply progressive styles
                     header.style.width = `${currentWidth}%`;
@@ -312,7 +313,7 @@
                     header.style.right = `${maxMargin}%`;
                     header.style.margin = `${topMargin}px auto`;
                     header.style.borderRadius = '50px'; // Immediate full rounding
-                    header.style.backgroundColor = 'rgba(255, 255, 255, 1)'; // Solid white
+                    header.style.backgroundColor = `rgba(255, 255, 255, ${backgroundOpacity})`; // Progressive transparency
                     header.style.backdropFilter = `blur(${blurIntensity}px)`;
                     header.style.boxShadow = scrollTop > 20 ? '0 8px 32px rgba(0, 0, 0, 0.1)' : 'none';
                     header.style.border = 'none';
@@ -320,7 +321,7 @@
                     // Add progressive class for styling
                     header.classList.add('progressive');
                 } else {
-                    // Reset to original transparent state
+                    // Reset to original white state
                     header.style.width = '';
                     header.style.height = '';
                     header.style.left = '';
@@ -330,7 +331,7 @@
                     header.style.backgroundColor = '';
                     header.style.backdropFilter = '';
                     header.style.boxShadow = '';
-                    header.style.border = 'none';
+                    header.style.border = '';
                     header.classList.remove('progressive');
                 }
                 ticking = false;
