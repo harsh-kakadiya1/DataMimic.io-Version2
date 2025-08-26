@@ -9,7 +9,7 @@
         <h1 class="gradient-text">Welcome to DataMimic.io</h1>
         <p class="lead-text">Generate synthetic data with modern UI and advanced features</p>
         <div class="hero-buttons">
-            <a href="{{ url_for('generator') }}" class="animated-button primary">
+            <a href="#" id="tryDataMimicBtn" class="animated-button primary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -19,7 +19,7 @@
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
             </a>
-            <a href="{{ url_for('eda') }}" class="animated-button secondary">
+            <a href="#" id="exploreEdaBtn" class="animated-button secondary">
                 <svg xmlns="http://www.w3.org/2000/svg" class="arr-2" viewBox="0 0 24 24">
                     <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
                 </svg>
@@ -206,6 +206,224 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
     });
+
+    // Arrow Animation Functionality
+    const tryBtn = document.getElementById('tryDataMimicBtn');
+    const edaBtn = document.getElementById('exploreEdaBtn');
+    
+    function createArrowElement(color = 'default') {
+        const arrow = document.createElement('div');
+        if (color === 'blue') {
+            arrow.className = 'arrow-animation blue';
+        } else if (color === 'orange') {
+            arrow.className = 'arrow-animation orange';
+        } else {
+            arrow.className = 'arrow-animation';
+        }
+        arrow.innerHTML = `
+            <svg class="arrow-svg" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"></path>
+            </svg>
+        `;
+        return arrow;
+    }
+
+    function animateArrowToGenerator() {
+        // Prevent default link behavior
+        event.preventDefault();
+        
+        // Disable interactions during animation
+        document.body.classList.add('animation-active');
+        
+        // Get button position
+        const btnRect = tryBtn.getBoundingClientRect();
+        const arrow = createArrowElement('blue');
+        
+        // Position arrow at button location
+        arrow.style.left = (btnRect.right + 15) + 'px';
+        arrow.style.top = (btnRect.top + btnRect.height / 2 - 16) + 'px';
+        
+        // Add arrow to document
+        document.body.appendChild(arrow);
+        
+        // Show arrow
+        setTimeout(() => {
+            arrow.classList.add('active');
+        }, 150);
+        
+        // Find Generator nav link
+        const generatorLink = document.querySelector('nav a[href*="generator"]');
+        
+        if (generatorLink) {
+            const navRect = generatorLink.getBoundingClientRect();
+            
+            // Calculate smooth curved path with longer route
+            const startX = btnRect.right + 15;
+            const startY = btnRect.top + btnRect.height / 2 - 16;
+            const endX = navRect.left + navRect.width / 2 - 16;
+            const endY = navRect.top + navRect.height / 2 - 16;
+            
+            // Create shorter, direct curved path
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            
+            // Simple arc - shorter route
+            const midX = deltaX * 0.5;
+            const midY = deltaY * 0.5 - 80; // Small upward arc
+            
+            // Calculate smooth rotation angle
+            const finalAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+            
+            // Create simple, continuous animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes smoothArrowFlight {
+                    0% {
+                        transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+                        opacity: 1;
+                    }
+                    50% {
+                        transform: translateX(${midX}px) translateY(${midY}px) rotate(${finalAngle * 0.5}deg) scale(1.1);
+                        opacity: 1;
+                    }
+                    90% {
+                        transform: translateX(${deltaX}px) translateY(${deltaY}px) rotate(${finalAngle}deg) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateX(${deltaX}px) translateY(${deltaY}px) rotate(${finalAngle}deg) scale(0.8);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Start smooth flight animation
+            setTimeout(() => {
+                arrow.style.animation = 'smoothArrowFlight 2.5s ease-out forwards';
+                
+                // Add pulse effect to target
+                setTimeout(() => {
+                    generatorLink.classList.add('nav-target-pulse');
+                }, 1800);
+            }, 300);
+            
+            // Navigate after animation completes
+            setTimeout(() => {
+                // Clean up
+                document.body.removeChild(arrow);
+                document.head.removeChild(style);
+                document.body.classList.remove('animation-active');
+                generatorLink.classList.remove('nav-target-pulse');
+                
+                // Navigate to generator page
+                window.location.href = "{{ url_for('generator') }}";
+            }, 3000);
+        }
+    }
+    
+    function animateArrowToEda() {
+        // Prevent default link behavior
+        event.preventDefault();
+        
+        // Disable interactions during animation
+        document.body.classList.add('animation-active');
+        
+        // Get button position
+        const btnRect = edaBtn.getBoundingClientRect();
+        const arrow = createArrowElement('orange'); // Orange arrow
+        
+        // Position arrow at button location
+        arrow.style.left = (btnRect.right + 15) + 'px';
+        arrow.style.top = (btnRect.top + btnRect.height / 2 - 16) + 'px';
+        
+        // Add arrow to document
+        document.body.appendChild(arrow);
+        
+        // Show arrow
+        setTimeout(() => {
+            arrow.classList.add('active');
+        }, 150);
+        
+        // Find EDA nav link
+        const edaLink = document.querySelector('nav a[href*="eda"]');
+        
+        if (edaLink) {
+            const navRect = edaLink.getBoundingClientRect();
+            
+            // Calculate smooth curved path
+            const startX = btnRect.right + 15;
+            const startY = btnRect.top + btnRect.height / 2 - 16;
+            const endX = navRect.left + navRect.width / 2 - 16;
+            const endY = navRect.top + navRect.height / 2 - 16;
+            
+            // Create shorter, direct curved path
+            const deltaX = endX - startX;
+            const deltaY = endY - startY;
+            
+            // Simple arc - shorter route
+            const midX = deltaX * 0.5;
+            const midY = deltaY * 0.5 - 80; // Small upward arc
+            
+            // Calculate smooth rotation angle
+            const finalAngle = Math.atan2(deltaY, deltaX) * (180 / Math.PI);
+            
+            // Create simple, continuous animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes smoothArrowFlightEda {
+                    0% {
+                        transform: translateX(0) translateY(0) rotate(0deg) scale(1);
+                        opacity: 1;
+                    }
+                    50% {
+                        transform: translateX(${midX}px) translateY(${midY}px) rotate(${finalAngle * 0.5}deg) scale(1.1);
+                        opacity: 1;
+                    }
+                    90% {
+                        transform: translateX(${deltaX}px) translateY(${deltaY}px) rotate(${finalAngle}deg) scale(1);
+                        opacity: 1;
+                    }
+                    100% {
+                        transform: translateX(${deltaX}px) translateY(${deltaY}px) rotate(${finalAngle}deg) scale(0.8);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            // Start smooth flight animation
+            setTimeout(() => {
+                arrow.style.animation = 'smoothArrowFlightEda 2.5s ease-out forwards';
+                
+                // Add pulse effect to target
+                setTimeout(() => {
+                    edaLink.classList.add('nav-target-pulse');
+                }, 1800);
+            }, 300);
+            
+            // Navigate after animation completes
+            setTimeout(() => {
+                // Clean up
+                document.body.removeChild(arrow);
+                document.head.removeChild(style);
+                document.body.classList.remove('animation-active');
+                edaLink.classList.remove('nav-target-pulse');
+                
+                // Navigate to EDA page
+                window.location.href = "{{ url_for('eda') }}";
+            }, 3000);
+        }
+    }
+
+    // Attach click events to buttons
+    if (tryBtn) {
+        tryBtn.addEventListener('click', animateArrowToGenerator);
+    }
+    
+    if (edaBtn) {
+        edaBtn.addEventListener('click', animateArrowToEda);
+    }
 });
 </script>
 {% endblock %}

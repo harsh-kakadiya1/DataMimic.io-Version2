@@ -522,6 +522,74 @@ tr:hover {
     margin-top: 0.25rem;
 }
 
+/* Arrow Animation Styles */
+.arrow-animation {
+    position: fixed;
+    width: 32px;
+    height: 32px;
+    z-index: 9999;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.arrow-animation.active {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.arrow-svg {
+    width: 100%;
+    height: 100%;
+    fill: var(--primary-blue);
+    filter: drop-shadow(0 2px 12px rgba(100, 149, 237, 0.6));
+    transition: all 0.3s ease;
+}
+
+/* Blue Arrow Animation for DataMimic.io */
+.arrow-animation.blue .arrow-svg {
+    fill: var(--secondary-blue);
+    filter: drop-shadow(0 2px 12px rgba(52, 152, 219, 0.6));
+}
+
+/* Orange Arrow Animation for EDA */
+.arrow-animation.orange .arrow-svg {
+    fill: #ff9800;
+    filter: drop-shadow(0 2px 12px rgba(255, 152, 0, 0.6));
+}
+
+/* Smooth arrow flight path animation - no jumps, pure curves */
+.arrow-animation.flying {
+    animation: smoothArrowFlight 4s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+/* Pulse effect for target button */
+@keyframes targetPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(100, 149, 237, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(100, 149, 237, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(100, 149, 237, 0);
+    }
+}
+
+.nav-target-pulse {
+    animation: targetPulse 1s ease-out;
+}
+
+/* Disable pointer events during animation */
+.animation-active {
+    pointer-events: none;
+}
+
+.animation-active * {
+    pointer-events: none;
+}
+
 /* Style for the missing values in the table */
 .missing-value {
     color: #999;
