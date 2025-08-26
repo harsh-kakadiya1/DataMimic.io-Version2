@@ -204,8 +204,30 @@
                     <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
                 </ul>
             </nav>
+            
+            <!-- Mobile Menu Toggle -->
+            <button class="mobile-menu-toggle" id="mobileMenuToggle" aria-label="Toggle mobile menu">
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+                <span class="hamburger-line"></span>
+            </button>
         </div>
     </header>
+
+    <!-- Mobile Navigation Overlay -->
+    <div class="mobile-nav-overlay" id="mobileNavOverlay"></div>
+    
+    <!-- Mobile Navigation Menu -->
+    <nav class="mobile-nav-menu" id="mobileNavMenu">
+        <ul>
+            <li><a href="{{ url_for('home') }}" class="{% if request.endpoint == 'home' %}active{% endif %}">Home</a></li>
+            <li><a href="{{ url_for('generator') }}" class="{% if request.endpoint == 'generator' %}active{% endif %}">Generator</a></li>
+            <li><a href="{{ url_for('eda') }}" class="{% if request.endpoint == 'eda' %}active{% endif %}">EDA & Pre-processing</a></li>
+            <li><a href="{{ url_for('about') }}" class="{% if request.endpoint == 'about' %}active{% endif %}">About</a></li>
+            <li><a href="{{ url_for('features') }}" class="{% if request.endpoint == 'features' %}active{% endif %}">Features</a></li>
+            <li><a href="{{ url_for('contact') }}" class="{% if request.endpoint == 'contact' %}active{% endif %}">Contact</a></li>
+        </ul>
+    </nav>
 
     <main class="main-content">
         <div class="container">
@@ -402,6 +424,60 @@
         
         // Initial call
         updateScrollProgress();
+        
+        // Mobile Menu Functionality
+        const mobileMenuToggle = document.getElementById('mobileMenuToggle');
+        const mobileNavOverlay = document.getElementById('mobileNavOverlay');
+        const mobileNavMenu = document.getElementById('mobileNavMenu');
+        const body = document.body;
+        
+        function toggleMobileMenu() {
+            const isActive = mobileMenuToggle.classList.contains('active');
+            
+            if (isActive) {
+                closeMobileMenu();
+            } else {
+                openMobileMenu();
+            }
+        }
+        
+        function openMobileMenu() {
+            mobileMenuToggle.classList.add('active');
+            mobileNavOverlay.classList.add('active');
+            mobileNavMenu.classList.add('active');
+            body.style.overflow = 'hidden'; // Prevent background scrolling
+        }
+        
+        function closeMobileMenu() {
+            mobileMenuToggle.classList.remove('active');
+            mobileNavOverlay.classList.remove('active');
+            mobileNavMenu.classList.remove('active');
+            body.style.overflow = ''; // Restore scrolling
+        }
+        
+        // Event listeners
+        mobileMenuToggle.addEventListener('click', toggleMobileMenu);
+        mobileNavOverlay.addEventListener('click', closeMobileMenu);
+        
+        // Close menu when clicking on a link
+        const mobileNavLinks = mobileNavMenu.querySelectorAll('a');
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', closeMobileMenu);
+        });
+        
+        // Close menu on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && mobileNavMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
+        
+        // Handle window resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768 && mobileNavMenu.classList.contains('active')) {
+                closeMobileMenu();
+            }
+        });
     </script>
     
     {% block scripts %}{% endblock %}

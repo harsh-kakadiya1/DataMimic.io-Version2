@@ -416,13 +416,27 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Attach click events to buttons
+    // Attach click and touch events to buttons for mobile compatibility
     if (tryBtn) {
         tryBtn.addEventListener('click', animateArrowToGenerator);
+        tryBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            animateArrowToGenerator(e);
+        });
+        // Add mobile-specific styles
+        tryBtn.style.touchAction = 'manipulation';
+        tryBtn.style.webkitTapHighlightColor = 'transparent';
     }
     
     if (edaBtn) {
         edaBtn.addEventListener('click', animateArrowToEda);
+        edaBtn.addEventListener('touchend', function(e) {
+            e.preventDefault();
+            animateArrowToEda(e);
+        });
+        // Add mobile-specific styles
+        edaBtn.style.touchAction = 'manipulation';
+        edaBtn.style.webkitTapHighlightColor = 'transparent';
     }
 });
 </script>
