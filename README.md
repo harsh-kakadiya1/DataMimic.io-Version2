@@ -1,4 +1,4 @@
-# [DataMimic.io](http://synxdatagen.netlify.app/home): Advanced Synthetic Data Generation & No-Code EDA/Pre-processing Platform
+# [DataMimic.io](https://datamimic-io.onrender.com/): Advanced Synthetic Data Generation & No-Code EDA/Pre-processing Platform
 
 ## Project Goal
 To develop a comprehensive web application, DataMimic.io, that serves as a powerful, user-friendly tool for both generating highly customizable synthetic datasets and performing intuitive, no-code Exploratory Data Analysis (EDA) and data pre-processing on uploaded files. The platform will empower data scientists, analysts, students, and learners by simplifying complex data tasks.
@@ -36,4 +36,5 @@ To develop a comprehensive web application, DataMimic.io, that serves as a power
 git clone <your-repo-url>
 
 cd DataMimic.io
+
 
