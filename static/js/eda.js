@@ -1,6 +1,13 @@
 document.addEventListener('DOMContentLoaded', () => {
     const uploadForm = document.getElementById('uploadForm');
     const fileUploadInput = document.getElementById('fileUpload');
+    const fileDropZone = document.getElementById('fileDropZone');
+    const browseBtn = document.getElementById('browseBtn');
+    const filePreview = document.getElementById('filePreview');
+    const fileName = document.getElementById('fileName');
+    const fileSize = document.getElementById('fileSize');
+    const removeFileBtn = document.getElementById('removeFileBtn');
+    const uploadSubmitBtn = document.getElementById('uploadSubmitBtn');
     const edaLoading = document.getElementById('eda-loading');
     const edaResults = document.getElementById('eda-results');
     const edaTotalRows = document.getElementById('eda-total-rows');
@@ -32,6 +39,104 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let chartInstance = null;
     let currentDfId = null;
+
+    // File Upload Functionality
+    function validateFile(file) {
+        const maxSize = 100 * 1024 * 1024; // 100MB in bytes
+        const allowedTypes = ['.csv', '.xlsx'];
+        const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+        
+        if (!allowedTypes.includes(fileExtension)) {
+            showFlashMessage('Invalid file type. Only CSV and XLSX files are allowed.', 'error');
+            return false;
+        }
+        
+        if (file.size > maxSize) {
+            showFlashMessage('File size exceeds 100MB limit. Please choose a smaller file.', 'error');
+            return false;
+        }
+        
+        return true;
+    }
+
+    function formatFileSize(bytes) {
+        if (bytes === 0) return '0 Bytes';
+        const k = 1024;
+        const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(k));
+        return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    function showFilePreview(file) {
+        fileName.textContent = file.name;
+        fileSize.textContent = formatFileSize(file.size);
+        
+        // Update file icon based on file type
+        const fileIcon = document.querySelector('.file-icon');
+        if (file.name.toLowerCase().endsWith('.csv')) {
+            fileIcon.className = 'fas fa-file-csv file-icon';
+        } else {
+            fileIcon.className = 'fas fa-file-excel file-icon';
+        }
+        
+        fileDropZone.querySelector('.file-drop-content').style.display = 'none';
+        filePreview.style.display = 'flex';
+        uploadSubmitBtn.style.display = 'block';
+    }
+
+    function hideFilePreview() {
+        fileDropZone.querySelector('.file-drop-content').style.display = 'flex';
+        filePreview.style.display = 'none';
+        uploadSubmitBtn.style.display = 'none';
+        fileUploadInput.value = '';
+    }
+
+    // Browse button click handler
+    browseBtn.addEventListener('click', () => {
+        fileUploadInput.click();
+    });
+
+    // File input change handler
+    fileUploadInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file && validateFile(file)) {
+            showFilePreview(file);
+        } else {
+            hideFilePreview();
+        }
+    });
+
+    // Remove file button handler
+    removeFileBtn.addEventListener('click', () => {
+        hideFilePreview();
+    });
+
+    // Drag and drop handlers
+    fileDropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileDropZone.classList.add('drag-over');
+    });
+
+    fileDropZone.addEventListener('dragleave', (e) => {
+        e.preventDefault();
+        if (!fileDropZone.contains(e.relatedTarget)) {
+            fileDropZone.classList.remove('drag-over');
+        }
+    });
+
+    fileDropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileDropZone.classList.remove('drag-over');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            const file = files[0];
+            if (validateFile(file)) {
+                fileUploadInput.files = files;
+                showFilePreview(file);
+            }
+        }
+    });
 
     // Chart functionality
     function updateChartColumnSelectors() {

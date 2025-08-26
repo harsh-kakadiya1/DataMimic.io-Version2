@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DataMimic.io - {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='images/favicon.svg') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
     
@@ -184,6 +185,9 @@
     <div class="site-bg-grid"></div>
     <header class="main-header">
         <div class="header-content">
+            <div class="logo">
+                <h1>DataMimic.io</h1>
+            </div>
             <nav class="main-nav">
                 <ul>
                     {# Dynamic active class based on current Flask endpoint #}

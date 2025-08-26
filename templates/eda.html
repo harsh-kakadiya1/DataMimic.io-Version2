@@ -19,9 +19,35 @@
         <div class="form-group">
             <h3><i class="fas fa-upload"></i> Step 1: Upload Your Data</h3>
             <form id="uploadForm" action="{{ url_for('upload_eda_file') }}" method="POST" enctype="multipart/form-data">
-                <input class="form-control" type="file" id="fileUpload" name="file" accept=".csv, .xlsx" required>
-                <p class="help-text">Max file size: 100MB. Allowed: .csv, .xlsx</p>
-                <button type="submit" class="generate-btn"><i class="fas fa-upload"></i> Upload File</button>
+                <div class="file-upload-container">
+                    <div class="file-drop-zone" id="fileDropZone">
+                        <div class="file-drop-content">
+                            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+                            <h4>Drop your file here</h4>
+                            <p class="upload-text">Excel and CSV supported</p>
+                            <p class="upload-info">Max file size: 100MB • Allowed: .csv, .xlsx</p>
+                            <button type="button" class="browse-btn" id="browseBtn">
+                                <i class="fas fa-folder-open"></i> Browse Files
+                            </button>
+                        </div>
+                        <div class="file-preview" id="filePreview" style="display: none;">
+                            <div class="file-info">
+                                <i class="fas fa-file-excel file-icon"></i>
+                                <div class="file-details">
+                                    <span class="file-name" id="fileName"></span>
+                                    <span class="file-size" id="fileSize"></span>
+                                </div>
+                                <button type="button" class="remove-file-btn" id="removeFileBtn">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="file" id="fileUpload" name="file" accept=".csv,.xlsx" required style="display: none;">
+                </div>
+                <button type="submit" class="generate-btn" id="uploadSubmitBtn" style="display: none;">
+                    <i class="fas fa-upload"></i> Upload File
+                </button>
             </form>
         </div>
 
@@ -78,7 +104,7 @@
             <div class="form-group">
                 <h3><i class="fas fa-columns"></i> Step 4: Column Analysis</h3>
                 <div class="table-container">
-                    <table id="columnDetailsTable">
+                    <table id="columnDetailsTable" class="table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>Column Name</th>
@@ -222,7 +248,7 @@
             </div>
 
             <!-- Step 7: Download Processed Data -->
-            <div class="form-group">
+            <div class="form-group" style="margin-bottom: 0rem;">
                 <h3><i class="fas fa-download"></i> Step 7: Download Processed Data</h3>
                 <div class="text-center">
                     <div class="button-group justify-content-center">

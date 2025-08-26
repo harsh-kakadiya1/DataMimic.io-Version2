@@ -1247,6 +1247,166 @@ select option:disabled {
 
 /* Removed Plotting specific styles */
 
+/* File Upload Styles */
+.file-upload-container {
+    margin: 2rem 0;
+}
+
+.file-drop-zone {
+    border: 2px dashed var(--light-blue);
+    border-radius: 12px;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.02) 0%, rgba(255, 152, 0, 0.02) 100%);
+    transition: all 0.3s ease;
+    position: relative;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.file-drop-zone:hover {
+    border-color: var(--primary-blue);
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.05) 0%, rgba(255, 152, 0, 0.05) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(26, 115, 232, 0.1);
+}
+
+.file-drop-zone.drag-over {
+    border-color: var(--primary-blue);
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.1) 0%, rgba(255, 152, 0, 0.1) 100%);
+    transform: scale(1.02);
+}
+
+.file-drop-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: var(--primary-blue);
+    margin-bottom: 0.5rem;
+}
+
+.file-drop-content h4 {
+    color: var(--dark-blue);
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 600;
+}
+
+.upload-text {
+    color: var(--gray);
+    font-size: 1.1rem;
+    margin: 0;
+}
+
+.upload-info {
+    color: var(--light-gray);
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.browse-btn {
+    background: var(--primary-blue);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.browse-btn:hover {
+    background: var(--secondary-blue);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3);
+}
+
+.file-preview {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: white;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--primary-blue);
+}
+
+.file-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: rgba(26, 115, 232, 0.05);
+    border-radius: 8px;
+    min-width: 300px;
+}
+
+.file-icon {
+    font-size: 2rem;
+    color: var(--primary-blue);
+}
+
+.file-details {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.file-name {
+    font-weight: 600;
+    color: var(--dark-blue);
+    font-size: 1rem;
+}
+
+.file-size {
+    color: var(--gray);
+    font-size: 0.9rem;
+}
+
+.remove-file-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.remove-file-btn:hover {
+    background: #c82333;
+    transform: scale(1.1);
+}
+
+#uploadSubmitBtn {
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 300px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
 /* Hero Section Styles */
 .hero-section {
     position: relative;
