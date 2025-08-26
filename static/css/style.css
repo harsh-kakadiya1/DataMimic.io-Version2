@@ -288,6 +288,7 @@ select:focus, input[type="number"]:focus, input[type="text"]:focus, input[type="
 /* Results Styles */
 .results {
     margin-top: 2rem;
+    margin-bottom: 2rem;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(25px);
     -webkit-backdrop-filter: blur(25px);
@@ -1405,6 +1406,101 @@ select option:disabled {
     margin-left: auto;
     margin-right: auto;
     display: block;
+}
+
+/* Enhanced Column Analysis Table Styling */
+#columnDetailsTable {
+    border-collapse: collapse;
+    width: 100%;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#columnDetailsTable th {
+    background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+    color: white;
+    font-weight: 600;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-size: 0.9rem;
+}
+
+#columnDetailsTable td {
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid #e0e0e0;
+    font-size: 0.85rem;
+    background: white;
+}
+
+#columnDetailsTable tbody tr:nth-child(even) {
+    background: rgba(26, 115, 232, 0.02);
+}
+
+#columnDetailsTable tbody tr:hover {
+    background: rgba(26, 115, 232, 0.05);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#columnDetailsTable td:first-child {
+    font-weight: 600;
+    color: var(--dark-blue);
+    text-align: left;
+    padding-left: 12px;
+}
+
+#columnDetailsTable td:nth-child(2) {
+    font-weight: 500;
+    color: var(--secondary-blue);
+}
+
+/* EDA Hero Section Styles */
+.eda-hero-section {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    margin-top: 3rem;
+    margin-bottom: 3rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.eda-hero-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.05) 0%, rgba(255, 152, 0, 0.05) 100%);
+    z-index: -1;
+}
+
+.eda-hero-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--dark-blue);
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.eda-hero-subtitle {
+    font-size: 1.2rem;
+    color: var(--gray);
+    line-height: 1.6;
+    margin: 0;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Hero Section Styles */
