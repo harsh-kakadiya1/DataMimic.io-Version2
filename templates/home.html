@@ -174,11 +174,11 @@
             <div class="stat-label">Preprocessing Tools</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">1000+</div>
+            <div class="stat-number" id="dataGenerationCount">200</div>
             <div class="stat-label">Synthetic Data Generated</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number">500+</div>
+            <div class="stat-number" id="edaOperationsCount">200</div>
             <div class="stat-label">EDA & Pre-processing Performed</div>
         </div>
     </div>
@@ -206,6 +206,58 @@ document.addEventListener('DOMContentLoaded', function() {
         card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
         observer.observe(card);
     });
+
+    // Real-time analytics updates
+    function updateAnalytics() {
+        fetch('/api/analytics/stats')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const dataGenElement = document.getElementById('dataGenerationCount');
+                    const edaOpsElement = document.getElementById('edaOperationsCount');
+                    
+                    if (dataGenElement && edaOpsElement) {
+                        // Animate counter updates
+                        animateCounter(dataGenElement, parseInt(dataGenElement.textContent), data.stats.data_generations);
+                        animateCounter(edaOpsElement, parseInt(edaOpsElement.textContent), data.stats.eda_operations);
+                    }
+                }
+            })
+            .catch(error => {
+                console.log('Analytics update failed:', error);
+            });
+    }
+
+    // Animate counter changes
+    function animateCounter(element, start, end) {
+        if (start === end) return;
+        
+        const duration = 1000; // 1 second
+        const startTime = performance.now();
+        
+        function updateCounter(currentTime) {
+            const elapsed = currentTime - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            
+            // Easing function for smooth animation
+            const easeOut = 1 - Math.pow(1 - progress, 3);
+            const current = Math.round(start + (end - start) * easeOut);
+            
+            element.textContent = current.toLocaleString();
+            
+            if (progress < 1) {
+                requestAnimationFrame(updateCounter);
+            }
+        }
+        
+        requestAnimationFrame(updateCounter);
+    }
+
+    // Initial load
+    updateAnalytics();
+    
+    // Update every 30 seconds
+    setInterval(updateAnalytics, 30000);
 
     // Arrow Animation Functionality
     const tryBtn = document.getElementById('tryDataMimicBtn');

@@ -25,7 +25,7 @@ from core.eda_preprocessing import (
     remove_duplicate_rows, remove_specific_columns, change_data_type,
     scale_columns, clean_text_capitalization, format_file_size, current_dataframes
 )
-
+from core.analytics import increment_data_generation, increment_eda_operations, get_current_stats
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -122,6 +122,9 @@ def generate_data_api():
             selected_columns=selected_columns,
             custom_columns=custom_columns
         )
+
+        # Increment data generation counter
+        increment_data_generation()
 
         df_id = str(uuid.uuid4())
         current_dataframes[df_id] = df_generated
@@ -241,6 +244,9 @@ def upload_eda_file():
 
         summary = get_eda_summary(df)
         summary["fileSize"] = format_file_size(df)
+
+        # Increment EDA operations counter for file upload
+        increment_eda_operations()
 
         session['current_eda_df_id'] = df_id
         
@@ -368,6 +374,9 @@ def eda_action(action):
         else:
             return jsonify({'success': False, 'message': 'Invalid EDA action.'}), 400
 
+        # Increment EDA operations counter
+        increment_eda_operations()
+
         update_dataframe(df_id, df)
         
         summary = get_eda_summary(df)
@@ -387,7 +396,6 @@ def eda_action(action):
         app.logger.error(f"Error during EDA action '{action}': {e}", exc_info=True)
         return jsonify({'success': False, 'message': f'An unexpected error occurred during EDA operation: {str(e)}. Please check server logs.'}), 500
 
-# Removed /api/eda/plot/<plot_type> route
 
 @app.route('/api/eda/download_processed_data/<df_id>/<file_format>')
 def download_processed_data(df_id, file_format):
@@ -439,6 +447,20 @@ def download_processed_data(df_id, file_format):
         app.logger.error(f"Error downloading processed data {df_id} in {file_format}: {e}", exc_info=True)
         flash("An error occurred during file download. Please check server logs.", 'danger')
         return redirect(url_for('eda'))
+
+
+@app.route('/api/analytics/stats')
+def get_analytics_stats():
+    """API endpoint to get current analytics statistics."""
+    try:
+        stats = get_current_stats()
+        return jsonify({
+            'success': True,
+            'stats': stats
+        })
+    except Exception as e:
+        app.logger.error(f"Error getting analytics stats: {e}", exc_info=True)
+        return jsonify({'success': False, 'message': 'Error retrieving analytics data.'}), 500
 
 
 @app.route('/submit_contact', methods=['POST'])
