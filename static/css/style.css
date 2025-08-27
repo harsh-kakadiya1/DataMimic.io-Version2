@@ -466,13 +466,83 @@ tr:hover td {
     gap: 1rem;
 }
 
-.social-links a {
+/* Animated Social Buttons */
+.social-btn {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    background-color: transparent;
+    position: relative;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: all 0.3s;
+    text-decoration: none;
+}
+
+.social-btn .svgContainer {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    backdrop-filter: blur(0px);
+    letter-spacing: 0.8px;
+    border-radius: 10px;
+    transition: all 0.3s;
+    border: 1px solid rgba(156, 156, 156, 0.466);
+}
+
+.social-btn .BG {
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    border-radius: 10px;
+    pointer-events: none;
+    transition: all 0.3s;
+}
+
+.social-btn:hover .BG {
+    transform: rotate(35deg) translateX(100%);
+    transform-origin: bottom left;
+}
+
+.social-btn:hover .svgContainer {
+    border: 1px solid rgba(216, 216, 216, 0.466);
+    background-color: rgba(190, 190, 190, 0.466);
+    backdrop-filter: blur(4px);
+}
+
+/* Platform-specific colors */
+.linkedin-btn .BG {
+    background: #0077b5;
+}
+
+.linkedin-btn .svgIcon {
+    fill: #0077b5 !important;
+}
+
+.github-btn .BG {
+    background: #333;
+}
+
+.github-btn .svgIcon {
+    fill: #333 !important;
+}
+
+/* Legacy social links for compatibility */
+.social-links a:not(.social-btn) {
     color: var(--gray);
     font-size: 1.5rem;
     transition: color 0.3s ease;
 }
 
-.social-links a:hover {
+.social-links a:not(.social-btn):hover {
     color: var(--primary-blue);
 }
 
@@ -481,6 +551,46 @@ tr:hover td {
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 1px solid var(--border-color);
+}
+
+/* Footer Feature Categories */
+.feature-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.feature-category h4 {
+    color: var(--secondary-blue);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.feature-category h4 i {
+    font-size: 0.9rem;
+    color: var(--primary-blue);
+}
+
+.feature-category ul {
+    margin-left: 1.5rem;
+}
+
+.feature-category ul li {
+    font-size: 0.9rem;
+    color: var(--gray);
+    margin-bottom: 0.4rem;
+    position: relative;
+}
+
+.feature-category ul li::before {
+    content: "•";
+    color: var(--primary-blue);
+    position: absolute;
+    left: -1rem;
 }
 
 /* Mobile Hamburger Menu */
@@ -2896,4 +3006,165 @@ select option:disabled {
         margin-right: 0;
         margin-bottom: 1rem;
     }
+}
+
+/* Business Hours Styles */
+.business-hours {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.business-hours:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.business-hours h3 {
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.business-hours h3 i {
+    color: var(--secondary-blue);
+}
+
+.hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hours-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.8), rgba(66, 133, 244, 0.8));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 1rem;
+    box-shadow: 0 4px 16px rgba(26, 115, 232, 0.3);
+    transition: all 0.3s ease;
+    min-width: 280px;
+    width: 100%;
+}
+
+.hours-list li:hover {
+    background: linear-gradient(135deg, rgba(21, 87, 176, 0.9), rgba(26, 115, 232, 0.9));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26, 115, 232, 0.4);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hours-list li:last-child {
+    margin-bottom: 0;
+}
+
+.hours-list li span:first-child {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.hours-list li span:last-child {
+    font-weight: 500;
+    opacity: 0.95;
+}
+/* Business Hours Styles */
+.business-hours {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.business-hours:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.business-hours h3 {
+    color: var(--primary-blue);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.business-hours h3 i {
+    color: var(--secondary-blue);
+}
+
+.hours-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.hours-list li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 1.5rem;
+    margin-bottom: 0.75rem;
+    background: linear-gradient(135deg, rgba(26, 115, 232, 0.8), rgba(66, 133, 244, 0.8));
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 12px;
+    color: var(--white);
+    font-weight: 500;
+    font-size: 1rem;
+    box-shadow: 0 4px 16px rgba(26, 115, 232, 0.3);
+    transition: all 0.3s ease;
+    min-width: 280px;
+    width: 100%;
+}
+
+.hours-list li:hover {
+    background: linear-gradient(135deg, rgba(21, 87, 176, 0.9), rgba(26, 115, 232, 0.9));
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(26, 115, 232, 0.4);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hours-list li:last-child {
+    margin-bottom: 0;
+}
+
+.hours-list li span:first-child {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.hours-list li span:last-child {
+    font-weight: 500;
+    opacity: 0.95;
 }
