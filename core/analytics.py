@@ -9,24 +9,12 @@ counter_lock = Lock()
 # Path to store analytics data
 ANALYTICS_FILE = 'analytics_data.json'
 
-def initialize_analytics():
-    """Initialize analytics file with preset values if it doesn't exist."""
-    if not os.path.exists(ANALYTICS_FILE):
-        preset_data = {
-            'data_generation_count': 300,
-            'eda_operations_count': 52,
-            'last_updated': datetime.now().isoformat()
-        }
-        with open(ANALYTICS_FILE, 'w') as f:
-            json.dump(preset_data, f, indent=2)
-        print(f"Analytics initialized with preset values: {preset_data['data_generation_count']} data generations, {preset_data['eda_operations_count']} EDA operations")
-
 def get_analytics_data():
     """Load analytics data from file, create if doesn't exist."""
     if not os.path.exists(ANALYTICS_FILE):
         default_data = {
-            'data_generation_count': 300,
-            'eda_operations_count': 52,
+            'data_generation_count': 0,
+            'eda_operations_count': 0,
             'last_updated': datetime.now().isoformat()
         }
         save_analytics_data(default_data)
@@ -38,8 +26,8 @@ def get_analytics_data():
     except (json.JSONDecodeError, FileNotFoundError):
         # If file is corrupted or missing, return default
         default_data = {
-            'data_generation_count': 300,
-            'eda_operations_count': 52,
+            'data_generation_count': 0,
+            'eda_operations_count': 0,
             'last_updated': datetime.now().isoformat()
         }
         save_analytics_data(default_data)
@@ -88,4 +76,5 @@ def reset_counters():
         return data
 
 # Initialize analytics on module import
-initialize_analytics()
+if not os.path.exists(ANALYTICS_FILE):
+    get_analytics_data()

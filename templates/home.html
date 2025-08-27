@@ -174,11 +174,11 @@
             <div class="stat-label">Preprocessing Tools</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" id="dataGenerationCount">999</div>
+            <div class="stat-number" id="dataGenerationCount">999+</div>
             <div class="stat-label">Synthetic Data Generated</div>
         </div>
         <div class="stat-card">
-            <div class="stat-number" id="edaOperationsCount">999</div>
+            <div class="stat-number" id="edaOperationsCount">999+</div>
             <div class="stat-label">EDA & Pre-processing Performed</div>
         </div>
     </div>
@@ -217,9 +217,13 @@ document.addEventListener('DOMContentLoaded', function() {
                     const edaOpsElement = document.getElementById('edaOperationsCount');
                     
                     if (dataGenElement && edaOpsElement) {
+                        // Get current displayed values (handle 999+ format)
+                        const currentDataGen = dataGenElement.textContent === '999+' ? 999 : parseInt(dataGenElement.textContent.replace(/,/g, '')) || 0;
+                        const currentEdaOps = edaOpsElement.textContent === '999+' ? 999 : parseInt(edaOpsElement.textContent.replace(/,/g, '')) || 0;
+                        
                         // Animate counter updates
-                        animateCounter(dataGenElement, parseInt(dataGenElement.textContent), data.stats.data_generations);
-                        animateCounter(edaOpsElement, parseInt(edaOpsElement.textContent), data.stats.eda_operations);
+                        animateCounter(dataGenElement, currentDataGen, data.stats.data_generations);
+                        animateCounter(edaOpsElement, currentEdaOps, data.stats.eda_operations);
                     }
                 }
             })
@@ -243,7 +247,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const easeOut = 1 - Math.pow(1 - progress, 3);
             const current = Math.round(start + (end - start) * easeOut);
             
-            element.textContent = current.toLocaleString();
+            // Format number with 999+ display
+            const displayValue = current > 999 ? '999+' : current.toLocaleString();
+            element.textContent = displayValue;
             
             if (progress < 1) {
                 requestAnimationFrame(updateCounter);
@@ -251,6 +257,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         requestAnimationFrame(updateCounter);
+    }
+
+    // Format counter display for initial load
+    function formatCounterDisplay(value) {
+        return value > 999 ? '999+' : value.toLocaleString();
     }
 
     // Initial load
