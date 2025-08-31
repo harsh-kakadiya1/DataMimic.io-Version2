@@ -23,15 +23,17 @@ document.addEventListener('DOMContentLoaded', function() {
     const columnStatsElement = document.getElementById('columnStats');
     const fileSizeElement = document.getElementById('fileSize');
 
-    const customColumnsContainer = document.getElementById('custom_columns_container');
-    // Removed autoPlotsContainer
-
+    // NEW: AI Custom Column elements
+    const aiCustomColumnNameInput = document.getElementById('ai_custom_col_name');
+    const aiCustomColumnTypeSelect = document.getElementById('ai_custom_col_type');
+    const aiCustomColumnPromptTextarea = document.getElementById('ai_custom_col_prompt');
+    const addAiCustomColumnBtn = document.getElementById('add_ai_custom_column_btn');
+    const aiCustomColumnsListContainer = document.getElementById('ai_custom_columns_list');
+    
+    let aiCustomColumnsDefinitions = []; // Array to hold AI custom column definitions
 
     let generatedDataPreview = [];
     let downloadUrls = {};
-
-    // Removed charts object and Chart.register call
-
 
     // Helper function to show Flask-style flash messages
     function showFlashMessage(message, category) {
@@ -42,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const div = document.createElement('div');
         div.classList.add('flash-message', `flash-${category}`);
-        div.innerHTML = `${message} <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';" aria-label="Close">&times;</button>`;
+        div.innerHTML = `${message} <button type="button" class="close-btn" onclick="this.parentElement.style.display='none';" aria-label="Close">×</button>`;
         container.appendChild(div);
 
         setTimeout(() => {
@@ -50,10 +52,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    // Function to populate column selectors based on selected schema
+    // Function to populate schema columns (no changes needed)
     async function populateColumnSelectors(schema) {
-        columnSelectContainer.innerHTML = ''; // Clear existing columns
-        selectAllCheckbox.checked = false; // Uncheck select all by default when schema changes
+        columnSelectContainer.innerHTML = ''; 
+        selectAllCheckbox.checked = false; 
 
         if (!schema) return;
 
@@ -88,13 +90,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Event listener for schema selection
+    // Event listener for schema selection (no changes needed)
     schemaSelect.addEventListener('change', function() {
         const schema = this.value;
         populateColumnSelectors(schema);
     });
     
-    // Event listener for select all checkbox
+    // Event listener for select all checkbox (no changes needed)
     selectAllCheckbox.addEventListener('change', function() {
         const checkboxes = document.querySelectorAll('#columnSelect input[type="checkbox"]');
         checkboxes.forEach(checkbox => {
@@ -102,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Initial population for default selected schema on page load
+    // Initial population for default selected schema on page load (no changes needed)
     if (schemaSelect.value) {
         populateColumnSelectors(schemaSelect.value);
     } else {
@@ -110,70 +112,78 @@ document.addEventListener('DOMContentLoaded', function() {
         selectAllCheckbox.checked = false;
     }
 
-    // Function to collect custom column data from UI
-    function collectCustomColumns() {
-        const customColumns = [];
-        const customColumnRows = customColumnsContainer.querySelectorAll('.custom-column-row-group');
-        
-        for (const row of customColumnRows) {
-            const nameInput = row.querySelector('input[name="custom_col_name[]"]');
-            const typeSelect = row.querySelector('select[name="custom_col_type[]"]');
-            const catValuesInput = row.querySelector('input[name="custom_col_categorical_values[]"]');
-            const rangeMinInput = row.querySelector('input[name="custom_col_range_min[]"]');
-            const rangeMaxInput = row.querySelector('input[name="custom_col_range_max[]"]');
+    // --- NEW: AI Custom Column Logic ---
 
-            const colName = nameInput ? nameInput.value.trim() : '';
-            const colType = typeSelect ? typeSelect.value : '';
-
-            if (!colName || !colType) {
-                showFlashMessage(`Custom column: Both name and type are required for each custom column.`, 'error');
-                return null;
-            }
-
-            let colDef = {
-                name: colName,
-                type: colType
-            };
-
-            if (colType === 'Categorical') {
-                const values = catValuesInput ? catValuesInput.value.split(',').map(v => v.trim()).filter(v => v !== '') : [];
-                if (values.length === 0) {
-                    showFlashMessage(`Custom column '${colName}': Categorical type requires comma-separated values.`, 'error');
-                    return null;
-                }
-                colDef.values = values;
-            } else if (colType === 'Integer' || colType === 'Float') {
-                const minValRaw = rangeMinInput ? rangeMinInput.value.trim() : '';
-                const maxValRaw = rangeMaxInput ? rangeMaxInput.value.trim() : '';
-
-                if (minValRaw === '' || maxValRaw === '') {
-                    showFlashMessage(`Custom column '${colName}': Numeric type requires valid min/max values.`, 'error');
-                    return null;
-                }
-                
-                const minVal = parseFloat(minValRaw);
-                const maxVal = parseFloat(maxValRaw);
-
-                if (isNaN(minVal) || isNaN(maxVal)) {
-                     showFlashMessage(`Custom column '${colName}': Min/Max values must be valid numbers.`, 'error');
-                     return null;
-                }
-                
-                if (minVal > maxVal) {
-                    showFlashMessage(`Custom column '${colName}': Min value cannot be greater than max value.`, 'error');
-                    return null;
-                }
-                colDef.range = [minVal, maxVal];
-                if (colType === 'Float') {
-                    colDef.decimal_places = 2;
-                }
-            } else if (colType === 'Date') {
-                colDef.days_ago = 365;
-            }
-            customColumns.push(colDef);
+    // Function to render the list of AI custom columns on the UI
+    function renderAiCustomColumnsList() {
+        aiCustomColumnsListContainer.innerHTML = '';
+        if (aiCustomColumnsDefinitions.length === 0) {
+            aiCustomColumnsListContainer.innerHTML = '<p class="text-muted">No AI custom columns added yet.</p>';
+            return;
         }
-        return customColumns;
+
+        aiCustomColumnsDefinitions.forEach((col, index) => {
+            const li = document.createElement('li');
+            li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+            li.innerHTML = `
+                <span><strong>${col.name}</strong> (${col.type}): ${col.prompt_description}</span>
+                <button type="button" class="btn btn-sm btn-outline-danger remove-ai-custom-col-btn" data-index="${index}">
+                    <i class="fas fa-trash"></i> Remove
+                </button>
+            `;
+            aiCustomColumnsListContainer.appendChild(li);
+        });
+
+        // Attach event listeners to new remove buttons
+        document.querySelectorAll('.remove-ai-custom-col-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const indexToRemove = parseInt(this.dataset.index);
+                aiCustomColumnsDefinitions.splice(indexToRemove, 1);
+                renderAiCustomColumnsList(); // Re-render the list
+            });
+        });
     }
+
+    // Event listener for adding an AI Custom Column
+    addAiCustomColumnBtn.addEventListener('click', function() {
+        const name = aiCustomColumnNameInput.value.trim();
+        const type = aiCustomColumnTypeSelect.value;
+        const prompt = aiCustomColumnPromptTextarea.value.trim();
+
+        if (!name || !type || !prompt) {
+            showFlashMessage('Please fill in all fields (Name, Type, Prompt) for the AI Custom Column.', 'error');
+            return;
+        }
+
+        // Check for duplicate names (case-insensitive)
+        if (aiCustomColumnsDefinitions.some(col => col.name.toLowerCase() === name.toLowerCase())) {
+            showFlashMessage(`An AI custom column with the name '${name}' already exists.`, 'error');
+            return;
+        }
+        // Also check against selected pre-defined columns (for robustness)
+        const selectedSchemaColumns = Array.from(document.querySelectorAll('#columnSelect input[type="checkbox"]:checked')).map(cb => cb.value);
+        if (selectedSchemaColumns.some(colName => colName.toLowerCase() === name.toLowerCase())) {
+            showFlashMessage(`The custom column name '${name}' conflicts with a pre-defined schema column. Please choose a different name.`, 'error');
+            return;
+        }
+
+
+        aiCustomColumnsDefinitions.push({
+            name: name,
+            type: type,
+            prompt_description: prompt,
+            generated_values: [] // Placeholder for AI-generated values
+        });
+
+        aiCustomColumnNameInput.value = '';
+        aiCustomColumnTypeSelect.value = ''; // Reset select
+        aiCustomColumnPromptTextarea.value = '';
+
+        renderAiCustomColumnsList();
+        showFlashMessage(`AI Custom Column '${name}' added.`, 'success');
+    });
+
+    renderAiCustomColumnsList(); // Initial render of the AI custom columns list
 
 
     // Event listener for generate button (AJAX call to Flask backend)
@@ -200,32 +210,63 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Get selected columns from pre-defined schema UI
         const checkboxes = document.querySelectorAll('#columnSelect input[type="checkbox"]:checked');
-        const selectedSchemaColumns = Array.from(checkboxes).map(cb => cb.value);
+        let selectedSchemaColumns = Array.from(checkboxes).map(cb => cb.value);
 
-        // Collect custom columns data
-        const customColumnsData = collectCustomColumns();
-        if (customColumnsData === null) {
-            return;
-        }
-        
-        // Determine all columns that should *actually* be in the final DataFrame for display purposes.
-        let finalDisplayColumns = [...selectedSchemaColumns];
-        customColumnsData.forEach(cc => {
-            if (!finalDisplayColumns.includes(cc.name)) {
-                finalDisplayColumns.push(cc.name);
+        // --- NEW: AI Custom Column Data Generation and Integration ---
+        if (aiCustomColumnsDefinitions.length > 0) {
+            showFlashMessage('Generating AI-powered column values...', 'info');
+            loadingDiv.style.display = 'block'; // Show global loading for AI generation
+            resultsDiv.style.display = 'none';
+
+            // Iterate through each AI custom column definition
+            for (let i = 0; i < aiCustomColumnsDefinitions.length; i++) {
+                const colDef = aiCustomColumnsDefinitions[i];
+                showFlashMessage(`AI generating values for column: ${colDef.name}...`, 'info');
+
+                try {
+                    const aiResponse = await fetch('/api/generate_ai_column_values', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            col_type: colDef.type,
+                            prompt_description: colDef.prompt_description,
+                            num_records: numRecords // Request AI to generate up to numRecords values
+                        })
+                    });
+                    const aiResult = await aiResponse.json();
+
+                    if (aiResult.success) {
+                        aiCustomColumnsDefinitions[i].generated_values = aiResult.generated_values;
+                        showFlashMessage(`AI successfully generated ${aiResult.num_records_generated_by_ai} values for '${colDef.name}'.`, 'success');
+                        // Add AI column to the list of selected columns so it appears in the final DataFrame
+                        if (!selectedSchemaColumns.includes(colDef.name)) {
+                            selectedSchemaColumns.push(colDef.name);
+                        }
+                    } else {
+                        showFlashMessage(`AI failed to generate values for '${colDef.name}': ${aiResult.message}`, 'error');
+                        // Optionally, you could mark this column for exclusion or fill with placeholder
+                        // For now, it will be skipped if it has no generated values
+                    }
+                } catch (error) {
+                    console.error(`AI generation error for column ${colDef.name}:`, error);
+                    showFlashMessage(`Network error during AI generation for '${colDef.name}'.`, 'error');
+                }
             }
-        });
+            loadingDiv.style.display = 'none'; // Hide loading after AI generation
+        }
+        // --- END NEW AI CUSTOM COLUMN LOGIC ---
 
-        if (finalDisplayColumns.length === 0) {
-            showFlashMessage('Please select or define at least one column for generation.', 'error');
+        // At this point, aiCustomColumnsDefinitions now contains generated_values for each AI column
+        // And selectedSchemaColumns contains both schema defaults and selected AI columns
+
+        if (selectedSchemaColumns.length === 0) {
+            showFlashMessage('Please select at least one column or add an AI Custom Column for generation.', 'error');
             return;
         }
         
         // Show loading animation and hide results
         loadingDiv.style.display = 'block';
         resultsDiv.style.display = 'none';
-        
-        // Removed plot related preparation for autoPlotsContainer
         
         showFlashMessage('Generating data...', 'info');
 
@@ -241,8 +282,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     varianceRatio,
                     schemaSelect: schema,
                     localitySelect: locality,
-                    selectedColumns: finalDisplayColumns,
-                    customColumns: customColumnsData
+                    selectedColumns: selectedSchemaColumns, // Use the updated list
+                    aiCustomColumns: aiCustomColumnsDefinitions // Send AI custom column definitions with values
                 })
             });
 
@@ -251,24 +292,21 @@ document.addEventListener('DOMContentLoaded', function() {
             if (result.success) {
                 generatedDataPreview = result.preview_data;
                 downloadUrls = result.download_paths;
-                displayData(finalDisplayColumns, result.summary_stats);
-                // Removed displayPlots(result.plots_data);
+                displayData(selectedSchemaColumns, result.summary_stats); // Pass updated columns list
                 showFlashMessage(result.message, 'success');
             } else {
                 showFlashMessage(`Error: ${result.message}`, 'error');
                 console.error("Backend error:", result.message);
-                // Removed plot related error message
             }
         } catch (error) {
             console.error('Generation fetch error:', error);
             showFlashMessage('An error occurred during data generation. Please check console for details.', 'error');
-            // Removed plot related network error message
         } finally {
             loadingDiv.style.display = 'none';
         }
     });
     
-    // Event Listeners for sliders to update displayed value
+    // Event Listeners for sliders to update displayed value (no changes needed)
     missingRatioSlider.addEventListener('input', function() {
         missingRatioValue.textContent = this.value + '%';
     });
@@ -278,8 +316,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     
 
-
-    // Update chart selectors after data is generated
+    // Update chart selectors after data is generated (no changes needed)
     function displayData(columns, summaryStats) {
         tableHeader.innerHTML = '';
         tableBody.innerHTML = '';
@@ -307,7 +344,7 @@ document.addEventListener('DOMContentLoaded', function() {
         resultsDiv.style.display = 'block';
     }
     
-    // Function to display data statistics (using data from backend summary)
+    // Function to display data statistics (using data from backend summary) (no changes needed)
     function displayDataStatistics(summaryStats, columns) {
         totalRecordsElement.textContent = summaryStats.total_rows; 
         missingValuesElement.textContent = summaryStats.missing_values;
@@ -374,7 +411,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Removed displayPlots function
 
-    // Functions to download files (now handled by backend URLs)
+    // Functions to download files (now handled by backend URLs) (no changes needed)
     downloadCsvBtn.addEventListener('click', () => {
         if (downloadUrls.csv) {
             window.location.href = downloadUrls.csv;

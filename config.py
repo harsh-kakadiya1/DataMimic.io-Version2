@@ -2,6 +2,9 @@ import os
 
 class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your_default_flask_secret_key_here_for_dev_only'
+
+    # Ensure this line is present and correct
+    GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
     
     # Paths for generated data only (no upload folder needed since we process files in memory)
     GENERATED_DATA_FOLDER = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'generated_data')
@@ -27,3 +30,5 @@ class Config:
     def allowed_file(filename):
         return '.' in filename and \
                filename.rsplit('.', 1)[1].lower() in Config.ALLOWED_EXTENSIONS
+    
+    
