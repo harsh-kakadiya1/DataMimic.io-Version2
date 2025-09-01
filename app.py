@@ -106,9 +106,9 @@ def generate_ai_column_values_api():
             return jsonify({'success': False, 'message': 'Column type and prompt description are required for AI generation.'}), 400
 
         # FIX: Reduced max_ai_generation_limit significantly for better reliability
-        # Instead of generating many, we'll ask for a smaller, highly reliable chunk (e.g., 10-20)
+        # Instead of generating 200, we'll ask for a smaller, highly reliable chunk (e.g., 20-50)
         # The backend synthetic_data.py will handle expanding this small chunk to num_records.
-        max_ai_generation_limit = 20 # Reduced to 20 for robust, fast generation
+        max_ai_generation_limit = 50 # Reduced to 50 for robust, fast generation
         
         # We still send the requested num_records to the prompt, but capped for AI generation.
         # The prompt will ask for `num_records_for_ai_actual_query` items.
@@ -601,4 +601,4 @@ def submit_contact():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)  # Set false for deploying
