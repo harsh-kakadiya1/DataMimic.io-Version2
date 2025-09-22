@@ -43,7 +43,6 @@ DataMimic.io is a web-based platform empowering data scientists, developers, and
 
 ### EDA Page Screenshot
 <img width="1919" height="1079" alt="image" src="https://github.com/user-attachments/assets/844937ae-7ec5-496e-b8fd-ca729834a8b2" />
-
 *The EDA & Pre-processing page after a file has been uploaded, showing the data summary and available operations.*
 
 ---
@@ -66,18 +65,60 @@ DataMimic.io is a web-based platform empowering data scientists, developers, and
 
 ---
 
-## Project Setup & Local Installation
+## **Project Setup & Local Installation**
 
 To run DataMimic.io on your local machine, follow these steps:
 
-### 1. Prerequisites
+### **1. Prerequisites**
 
 *   Python 3.9 or higher
 *   `pip` and `venv`
 
-### 2. Clone the Repository
+### **2. Clone the Repository**
 
 ```bash
 git clone https://github.com/harsh-kakadiya1/datamimic.io.git
 cd datamimic.io
+```
 
+### **3. Set up a Virtual Environment**
+```bash
+# For Windows
+python -m venv venv
+venv\Scripts\activate
+
+# For macOS/Linux
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### **4. Install Dependencies**
+```bash
+pip install -r requirements.txt
+```
+
+### **5. Configure Environment Variables**
+Create a file named .env in the root of the project directory. This file stores your secret keys and credentials.
+
+```bash
+SECRET_KEY='a_very_strong_and_random_secret_key'
+EMAIL_USER='your_email@gmail.com'
+EMAIL_PASS='your_gmail_app_password'
+GEMINI_API_KEY='your_google_gemini_api_key'
+```
+*   **SECRET_KEY**: A long, random string for Flask session security.  
+*   **EMAIL_USER / EMAIL_PASS**: Your Gmail credentials for the contact form. Use a Google App Password if you have 2-Factor Authentication enabled.  
+*   **GEMINI_API_KEY**: Your API key from Google AI Studio.  
+
+### 6. Run the Application
+```bash
+flask run
+```
+The application will be available at `http://127.0.0.1:5000`.
+
+## Authors
+Harsh Kakadiya - [GitHub](https://github.com/harsh-kakadiya1) | [LinkedIn](https://www.linkedin.com/in/harsh-kakadiya/)  
+Krish Kunjadiya - [GitHub](https://github.com/Krish-kunjadiya) | [LinkedIn](https://www.linkedin.com/in/krish-kunjadiya-845041285/) 
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
