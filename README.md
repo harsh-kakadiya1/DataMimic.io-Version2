@@ -27,7 +27,7 @@ DataMimic.io is a web-based platform empowering data scientists, developers, and
 
 ### AI Custom Column Feature Screenshot
 <img width="1317" height="638" alt="image" src="https://github.com/user-attachments/assets/eecc3d21-4bb2-48f9-a37b-621b56640a26" />
-*Defining an AI-powered custom column with a simple prompt.*
+*Defining an AI-powered custom column with a simple prompt filed to configure its details.*
 
 ### 2. No-Code EDA & Pre-processing
 
@@ -80,3 +80,4 @@ To run DataMimic.io on your local machine, follow these steps:
 ```bash
 git clone https://github.com/harsh-kakadiya1/datamimic.io.git
 cd datamimic.io
+
