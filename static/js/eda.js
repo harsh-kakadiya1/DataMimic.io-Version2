@@ -284,16 +284,69 @@ document.addEventListener('DOMContentLoaded', () => {
         // Destroy previous chart if exists
         if (chartInstance) chartInstance.destroy();
         
-        // Prepare data
-        const labels = data.map(row => row[xCol]);
-        let chartData = data.map(row => row[yCol]);
+        // Prepare data - fix x-axis labels
+        let labels, chartData, isCategorical = false;
         
-        // Try to convert to numbers if possible
-        if (chartType !== 'pie') {
-            chartData = chartData.map(v => {
-                const num = parseFloat(v);
-                return isNaN(num) ? v : num;
+        if (chartType === 'scatter') {
+            // For scatter plots, use actual x values but ensure they're numeric
+            const xValues = data.map(row => {
+                const val = row[xCol];
+                const num = parseFloat(val);
+                return isNaN(num) ? val : num;
             });
+            const yValues = data.map(row => {
+                const val = row[yCol];
+                const num = parseFloat(val);
+                return isNaN(num) ? val : num;
+            });
+            
+            chartData = xValues.map((x, i) => ({ x: x, y: yValues[i] }));
+            labels = []; // Scatter plots don't use labels array
+        } else {
+            // For other chart types, determine if x-axis should be categorical or sequential
+            const xValues = data.map(row => row[xCol]);
+            const uniqueXValues = [...new Set(xValues)];
+            isCategorical = uniqueXValues.length <= 20 && uniqueXValues.some(val => isNaN(parseFloat(val)));
+            
+            if (chartType === 'bar' && isCategorical) {
+                // For bar charts with categorical x-axis, use the actual categories
+                labels = uniqueXValues.map(val => String(val));
+                // Count occurrences for each category
+                const counts = {};
+                data.forEach(row => {
+                    const xVal = String(row[xCol]);
+                    const yVal = parseFloat(row[yCol]);
+                    if (!isNaN(yVal)) {
+                        counts[xVal] = (counts[xVal] || 0) + yVal;
+                    }
+                });
+                chartData = labels.map(label => counts[label] || 0);
+            } else if (chartType === 'bar' || chartType === 'line') {
+                // Use sequential indices for x-axis when data is not categorical
+                labels = data.map((_, index) => `Point ${index + 1}`);
+                chartData = data.map(row => {
+                    const val = row[yCol];
+                    const num = parseFloat(val);
+                    return isNaN(num) ? val : num;
+                });
+            } else {
+                // For other types, use the x column values but ensure they're meaningful
+                labels = data.map(row => {
+                    const val = row[xCol];
+                    // If it's a number, format it nicely
+                    const num = parseFloat(val);
+                    if (!isNaN(num)) {
+                        return num.toLocaleString();
+                    }
+                    return String(val);
+                });
+                
+                chartData = data.map(row => {
+                    const val = row[yCol];
+                    const num = parseFloat(val);
+                    return isNaN(num) ? val : num;
+                });
+            }
         }
         
         // Pie chart: group by value counts
@@ -371,7 +424,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 data: chartData,
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
-                fill: false
+                fill: false,
+                tension: chartType === 'line' ? 0.4 : 0
             }]
         };
         
@@ -380,24 +434,123 @@ document.addEventListener('DOMContentLoaded', () => {
             chartConfig = {
                 datasets: [{
                     label: `${yCol} vs ${xCol}`,
-                    data: data.map(row => ({ x: row[xCol], y: row[yCol] })),
-                    backgroundColor: 'rgba(54, 162, 235, 0.5)'
+                    data: chartData,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    pointRadius: 6,
+                    pointHoverRadius: 8
                 }]
+            };
+        }
+        
+        // Enhanced chart options
+        const chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            aspectRatio: 2,
+            plugins: { 
+                legend: { 
+                    display: true,
+                    position: 'top'
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        title: function(context) {
+                            if (chartType === 'scatter') {
+                                return `X: ${context[0].parsed.x}, Y: ${context[0].parsed.y}`;
+                            }
+                            return `Point ${context[0].dataIndex + 1}`;
+                        }
+                    }
+                }
+            },
+            scales: {}
+        };
+        
+        if (chartType === 'scatter') {
+            chartOptions.scales = {
+                x: { 
+                    type: 'linear', 
+                    position: 'bottom', 
+                    title: { 
+                        display: true, 
+                        text: xCol,
+                        font: { size: 14, weight: 'bold' }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                },
+                y: { 
+                    title: { 
+                        display: true, 
+                        text: yCol,
+                        font: { size: 14, weight: 'bold' }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    }
+                }
+            };
+        } else {
+            chartOptions.scales = {
+                x: {
+                    title: {
+                        display: true,
+                        text: chartType === 'bar' && isCategorical ? xCol : 'Data Points',
+                        font: { size: 14, weight: 'bold' }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    },
+                    ticks: {
+                        maxTicksLimit: 15,
+                        callback: function(value, index) {
+                            if (chartType === 'bar' && isCategorical) {
+                                // For categorical data, show all labels but rotate them
+                                return labels[index] || '';
+                            } else {
+                                // For sequential data, show every nth label to avoid overcrowding
+                                const step = Math.ceil(labels.length / 15);
+                                return index % step === 0 ? labels[index] : '';
+                            }
+                        },
+                        maxRotation: chartType === 'bar' && isCategorical ? 45 : 0,
+                        minRotation: chartType === 'bar' && isCategorical ? 45 : 0
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: yCol,
+                        font: { size: 14, weight: 'bold' }
+                    },
+                    grid: {
+                        color: 'rgba(0,0,0,0.1)'
+                    },
+                    ticks: {
+                        callback: function(value) {
+                            return typeof value === 'number' ? value.toLocaleString() : value;
+                        }
+                    }
+                }
             };
         }
         
         chartInstance = new Chart(ctx, {
             type: type,
             data: chartConfig,
-            options: {
-                responsive: true,
-                plugins: { legend: { display: true } },
-                scales: chartType === 'scatter' ? {
-                    x: { type: 'linear', position: 'bottom', title: { display: true, text: xCol } },
-                    y: { title: { display: true, text: yCol } }
-                } : {}
-            }
+            options: chartOptions
         });
+        
+        // Ensure chart resizes properly
+        setTimeout(() => {
+            if (chartInstance) {
+                chartInstance.resize();
+            }
+        }, 100);
     }
 
     // Helper function to show Flask-style flash messages
@@ -768,8 +921,85 @@ document.addEventListener('DOMContentLoaded', () => {
         drawChartBtn.addEventListener('click', drawEdaChart);
     }
     
+    // Smart Chart button
+    const smartChartBtn = document.getElementById('smartChartBtn');
+    if (smartChartBtn) {
+        smartChartBtn.addEventListener('click', () => {
+            suggestChartType();
+            setTimeout(() => {
+                drawEdaChart();
+            }, 500); // Small delay to ensure the chart type is updated
+        });
+    }
+    
     // Add event listener for chart type changes to filter Y-axis columns
     if (chartTypeSelect) {
         chartTypeSelect.addEventListener('change', filterYAxisColumns);
     }
+    
+    // Add smart chart type suggestion
+    function suggestChartType() {
+        if (!xColumnSelect || !yColumnSelect || !chartTypeSelect) return;
+        
+        const xCol = xColumnSelect.value;
+        const yCol = yColumnSelect.value;
+        if (!xCol || !yCol) return;
+        
+        // Get column details to determine data types
+        const columnDetails = [];
+        const columnDetailsTable = document.querySelector('#columnDetailsTable tbody');
+        if (columnDetailsTable) {
+            const detailRows = columnDetailsTable.querySelectorAll('tr');
+            detailRows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 2) {
+                    const columnName = cells[0].textContent;
+                    const dataType = cells[1].textContent;
+                    columnDetails.push({ name: columnName, dtype: dataType });
+                }
+            });
+        }
+        
+        const xColInfo = columnDetails.find(col => col.name === xCol);
+        const yColInfo = columnDetails.find(col => col.name === yCol);
+        
+        if (!xColInfo || !yColInfo) return;
+        
+        const xIsNumeric = ['int64', 'float64', 'Int64', 'int32', 'float32'].includes(xColInfo.dtype);
+        const yIsNumeric = ['int64', 'float64', 'Int64', 'int32', 'float32'].includes(yColInfo.dtype);
+        
+        let suggestedType = 'bar'; // default
+        
+        if (xIsNumeric && yIsNumeric) {
+            suggestedType = 'scatter';
+        } else if (!xIsNumeric && yIsNumeric) {
+            suggestedType = 'bar';
+        } else if (xIsNumeric && !yIsNumeric) {
+            suggestedType = 'pie';
+        } else if (!xIsNumeric && !yIsNumeric) {
+            suggestedType = 'pie';
+        }
+        
+        // Update the chart type selector
+        chartTypeSelect.value = suggestedType;
+        filterYAxisColumns();
+        
+        // Show a helpful message
+        showFlashMessage(`Suggested chart type: ${suggestedType} (based on your data types)`, 'info');
+    }
+    
+    // Add event listeners for smart suggestions
+    if (xColumnSelect && yColumnSelect) {
+        xColumnSelect.addEventListener('change', suggestChartType);
+        yColumnSelect.addEventListener('change', suggestChartType);
+    }
+    
+    // Handle window resize to maintain chart size
+    window.addEventListener('resize', () => {
+        if (chartInstance) {
+            setTimeout(() => {
+                chartInstance.resize();
+            }, 100);
+        }
+    });
 });

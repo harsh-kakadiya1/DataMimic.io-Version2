@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     let generatedDataPreview = [];
     let downloadUrls = {};
+    let currentRequest = null; // Store current request for cancellation
 
     // Helper function to show Flask-style flash messages
     function showFlashMessage(message, category) {
@@ -188,6 +189,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event listener for generate button (AJAX call to Flask backend)
     generateBtn.addEventListener('click', async function() {
+        // Cancel any previous request if it exists
+        if (currentRequest) {
+            console.log('Cancelling previous request...');
+            currentRequest.abort();
+            currentRequest = null;
+        }
+        
         const schema = schemaSelect.value;
         const locality = localitySelect.value;
         const numRecords = parseInt(numRecordsInput.value);
@@ -224,6 +232,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 showFlashMessage(`AI generating values for column: ${colDef.name}...`, 'info');
 
                 try {
+                    // Create AbortController for AI request cancellation
+                    const aiAbortController = new AbortController();
+                    currentRequest = aiAbortController; // Store for potential cancellation
+                    
                     const aiResponse = await fetch('/api/generate_ai_column_values', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -231,7 +243,8 @@ document.addEventListener('DOMContentLoaded', function() {
                             col_type: colDef.type,
                             prompt_description: colDef.prompt_description,
                             num_records: numRecords // Request AI to generate up to numRecords values
-                        })
+                        }),
+                        signal: aiAbortController.signal // Add abort signal
                     });
                     const aiResult = await aiResponse.json();
 
@@ -248,6 +261,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         // For now, it will be skipped if it has no generated values
                     }
                 } catch (error) {
+                    if (error.name === 'AbortError') {
+                        console.log(`AI generation for column ${colDef.name} was cancelled`);
+                        showFlashMessage('AI generation cancelled. Starting new generation...', 'info');
+                        return; // Exit the entire function if AI generation is cancelled
+                    }
                     console.error(`AI generation error for column ${colDef.name}:`, error);
                     showFlashMessage(`Network error during AI generation for '${colDef.name}'.`, 'error');
                 }
@@ -271,6 +289,10 @@ document.addEventListener('DOMContentLoaded', function() {
         showFlashMessage('Generating data...', 'info');
 
         try {
+            // Create AbortController for request cancellation
+            const abortController = new AbortController();
+            currentRequest = abortController;
+            
             const response = await fetch('/api/generate_data', {
                 method: 'POST',
                 headers: {
@@ -284,7 +306,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     localitySelect: locality,
                     selectedColumns: selectedSchemaColumns, // Use the updated list
                     aiCustomColumns: aiCustomColumnsDefinitions // Send AI custom column definitions with values
-                })
+                }),
+                signal: abortController.signal // Add abort signal
             });
 
             const result = await response.json();
@@ -299,9 +322,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.error("Backend error:", result.message);
             }
         } catch (error) {
+            if (error.name === 'AbortError') {
+                console.log('Request was cancelled');
+                showFlashMessage('Previous request cancelled. Starting new generation...', 'info');
+                return; // Don't show error for cancelled requests
+            }
             console.error('Generation fetch error:', error);
             showFlashMessage('An error occurred during data generation. Please check console for details.', 'error');
         } finally {
+            // Clear the current request reference
+            currentRequest = null;
             loadingDiv.style.display = 'none';
         }
     });

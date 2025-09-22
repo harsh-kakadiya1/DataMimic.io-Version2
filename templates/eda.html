@@ -146,12 +146,17 @@
                         <select id="xColumn" class="form-control" style="width: auto;"></select>
                         <label for="yColumn">Y Column:</label>
                         <select id="yColumn" class="form-control" style="width: auto;"></select>
-                        <button id="drawChartBtn" class="generate-btn small-btn">
+                        <button id="drawChartBtn" class="generate-btn small-btn" style="display: none;">
                             <i class="fas fa-chart-bar"></i> Draw Chart
                         </button>
+                        <button id="smartChartBtn" class="generate-btn small-btn" style="background: linear-gradient(135deg, #ff9800, #ffb74d);">
+                            <i class="fas fa-magic"></i> Smart Chart
+                        </button>
                     </div>
-                    <div style="margin-top: 1em;">
-                        <canvas id="edaChart" height="400"></canvas>
+                    <div style="margin-top: 1em; position: relative; width: 100%;">
+                        <div style="position: relative; width: 100%; height: 400px;">
+                            <canvas id="edaChart"></canvas>
+                        </div>
                     </div>
                 </div>
             </div>

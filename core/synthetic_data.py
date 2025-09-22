@@ -30,7 +30,33 @@ def generate_full_name(locality_faker):
     return locality_faker.name()
 
 def generate_phone_number(locality_faker):
-    return locality_faker.phone_number()
+    # Generate a properly formatted phone number
+    phone = locality_faker.phone_number()
+    # Clean up the phone number - remove extra characters and format
+    phone = ''.join(filter(str.isdigit, phone))
+    
+    # Handle empty or invalid phone numbers
+    if not phone or len(phone) < 7:
+        # Generate a simple 10-digit number if faker fails
+        phone = ''.join([str(random.randint(0, 9)) for _ in range(10)])
+    
+    # Format based on length and locality
+    if len(phone) == 10:
+        # Format as XXX-XXX-XXXX
+        return f"{phone[:3]}-{phone[3:6]}-{phone[6:]}"
+    elif len(phone) == 11 and phone.startswith('1'):
+        # Format as +1 (XXX) XXX-XXXX
+        return f"+1 ({phone[1:4]}) {phone[4:7]}-{phone[7:]}"
+    elif len(phone) == 12 and phone.startswith('91'):
+        # Indian format: +91 XXXXX XXXXX
+        return f"+91 {phone[2:7]} {phone[7:]}"
+    elif len(phone) > 10:
+        # International format
+        return f"+{phone}"
+    else:
+        # For shorter numbers, pad with zeros and format
+        padded_phone = phone.zfill(10)
+        return f"{padded_phone[:3]}-{padded_phone[3:6]}-{padded_phone[6:]}"
 
 def generate_street_address(locality_faker):
     return locality_faker.street_address()
@@ -162,7 +188,7 @@ SCHEMAS = {
             "Name": "Full Name",
             "Age": {"type": "Integer", "range": (18, 90)},
             "Gender": {"type": "Categorical", "values": ["Male", "Female", "Other"]},
-            "Contact": "Phone Number",
+            "Contact": {"type": "Phone Number"},
             "Symptom_1": {"type": "Categorical", "values": ["Fever", "Cough", "Headache", "Fatigue", "Sore throat"]},
             "Symptom_2": {"type": "Categorical", "values": ["Nausea", "Fatigue", "Rash", "Dizziness", "Sore Throat"]},
             "Diagnosis": {"type": "Categorical", "values": ["Flu", "Cold", "Allergy", "Fracture", "Pneumonia", "Bronchitis", "Diabetes", "Hypertension", "COVID-19", "Migraine", "Asthma"]},
@@ -377,6 +403,14 @@ def generate_synthetic_dataframe(
                 if not pd.isna(std_dev) and std_dev != 0:
                     scale_factor = 1 + (variance_ratio / 100.0)
                     df.loc[df[col_name].notna(), col_name] = mean_val + (df.loc[df[col_name].notna(), col_name] - mean_val) * scale_factor
+                    
+                    # Ensure amount/price columns remain positive after variance
+                    if col_name.lower() in ['amount', 'price', 'cost', 'value', 'balance', 'salary', 'income', 'expense', 'revenue', 'profit', 'loss', 'transaction_amount', 'payment_amount', 'loan_amount', 'interest_rate', 'rate', 'total', 'subtotal', 'tax', 'discount', 'fee', 'charge', 'payment', 'deposit', 'withdrawal', 'credit', 'debit']:
+                        df.loc[df[col_name].notna(), col_name] = df.loc[df[col_name].notna(), col_name].abs()
+                
+                # Round age values to integers if it's an age column
+                if col_name.lower() == 'age':
+                    df[col_name] = df[col_name].round().astype('Int64')
 
     # Filter by selected_columns at the end and maintain order
     # Ensure AI-generated columns are included in selected_columns for final filtering if they are selected
@@ -389,7 +423,47 @@ def generate_synthetic_dataframe(
     final_columns = [col for col in selected_columns if col in df.columns]
     df = df[final_columns]
     
+    # Post-processing: Format specific columns for better display
+    for col_name in df.columns:
+        if col_name.lower() == 'age':
+            # Ensure age is always an integer
+            df[col_name] = pd.to_numeric(df[col_name], errors='coerce').round().astype('Int64')
+        elif col_name.lower() in ['contact', 'phone', 'phone_number', 'mobile', 'telephone']:
+            # Format phone numbers consistently
+            df[col_name] = df[col_name].astype(str).apply(lambda x: format_phone_number(x) if pd.notna(x) and x != 'None' else x)
+        elif col_name.lower() in ['amount', 'price', 'cost', 'value', 'balance', 'salary', 'income', 'expense', 'revenue', 'profit', 'loss', 'transaction_amount', 'payment_amount', 'loan_amount', 'interest_rate', 'rate', 'total', 'subtotal', 'tax', 'discount', 'fee', 'charge', 'payment', 'deposit', 'withdrawal', 'credit', 'debit']:
+            # Format currency/amount columns to 2 decimal places and ensure positive values
+            df[col_name] = pd.to_numeric(df[col_name], errors='coerce').round(2)
+            # Ensure all amounts are positive (remove negative values)
+            df[col_name] = df[col_name].abs()
+    
     return df
+
+def format_phone_number(phone_str):
+    """Helper function to format phone numbers consistently"""
+    if not phone_str or phone_str == 'None' or pd.isna(phone_str):
+        return phone_str
+    
+    # Extract only digits
+    digits = ''.join(filter(str.isdigit, str(phone_str)))
+    
+    # Handle empty or invalid phone numbers
+    if not digits or len(digits) < 7:
+        return phone_str
+    
+    if len(digits) == 10:
+        return f"{digits[:3]}-{digits[3:6]}-{digits[6:]}"
+    elif len(digits) == 11 and digits.startswith('1'):
+        return f"+1 ({digits[1:4]}) {digits[4:7]}-{digits[7:]}"
+    elif len(digits) == 12 and digits.startswith('91'):
+        # Indian format: +91 XXXXX XXXXX
+        return f"+91 {digits[2:7]} {digits[7:]}"
+    elif len(digits) > 10:
+        return f"+{digits}"
+    else:
+        # For shorter numbers, pad with zeros and format
+        padded_digits = digits.zfill(10)
+        return f"{padded_digits[:3]}-{padded_digits[3:6]}-{padded_digits[6:]}"
 
 
 def get_dataframe_summary(df: pd.DataFrame):
